@@ -9,7 +9,7 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    themes: ["cupcake", "dark", 'light', "cmyk"],
+    themes: ["dark", "cupcake"],
   },
 }
 

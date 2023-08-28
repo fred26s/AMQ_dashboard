@@ -10,7 +10,7 @@ import articleBar from '../components/articleBar.vue'
 
 <template>
   <div class="container mx-auto">
-    <div class="flex">
+    <div class="flex justify-end mr-3">
       <theme msgPre="dark" msgNext="light"></theme>
     </div>
     <div class="flex flex-row flex-wrap mt-3">
