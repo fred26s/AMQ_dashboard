@@ -11,7 +11,9 @@ import {
 } from 'echarts/components';
 // line
 import { LineChart } from 'echarts/charts';
-import { GridComponent } from 'echarts/components';
+import { GridComponent,
+  LegendComponent,
+ } from 'echarts/components';
 
 
 import VChart, { THEME_KEY } from 'vue-echarts';
@@ -19,6 +21,7 @@ import { ref, provide } from 'vue';
 
 use([
   LineChart,
+  LegendComponent,
   GridComponent,
   CanvasRenderer,
   TitleComponent,
@@ -32,17 +35,39 @@ const option = ref({
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
-  yAxis: {
-    type: 'value'
+  yAxis: [
+    {
+      name: "values",
+      position: "left",
+      type: 'value'
+    },
+    {
+      name: "price",
+      position: "right",
+      type: 'value'
+    }
+  ],
+  legend: {
+    data: ['values', 'price']
   },
   tooltip: {
-    show: true
+    trigger: 'axis'
   },
   series: [
     {
       data: [820, 932, 901, 934, 1290, 1330, 1320],
       type: 'line',
+      name: "values",            
+      yAxisIndex: 0,
       smooth: true
+    },
+    {
+      data: [10000, 11000, 12000, 11000, 12000, 10000, 9000],
+      type: 'line',
+      name: "price",
+      yAxisIndex: 1,
+      smooth: true            
+
     }
   ]
 });

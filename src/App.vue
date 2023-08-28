@@ -1,5 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import footerBar from './components/footerBar.vue'
+
 </script>
 
 <template>
@@ -7,14 +9,22 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <!-- <HelloWorld msg="You did it!" /> -->
 
-  <header class="container flex justify-between">
-    <div class="order-last">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
+  <div class="container mx-auto">
+    <!-- <div class="flex justify-end space-x-5">
+    </div> -->
+    <div class="flex w-full">
+      <div class="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center">
+        <RouterLink class="w-full text-center" to="/">Home</RouterLink>
+      </div>
+      <div class="divider divider-horizontal"></div>
+      <div class="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center">
+        <RouterLink class="w-full text-center" to="/about">About</RouterLink>
+      </div>
     </div>
-  </header>
 
-  <RouterView />
+    <RouterView />
+  </div>
+  <footerBar></footerBar>
 </template>
 
 <style scoped></style>

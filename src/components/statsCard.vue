@@ -13,17 +13,14 @@ defineProps({
 </script>
 
 <template>
-  <div class="stats bg-neutral text-neutral-content">
+  <!-- <div class="stats stats-vertical md:stats-horizontal shadow"> -->
+  <div class="stats stats-horizontal shadow">
     <div class="stat">
       <div class="stat-title">{{ label }}</div>
-      <div class="stat-value">${{ value }}</div>
-      <div class="stat-actions">
-        <button class="btn btn-sm btn-success">{{ tips }}</button>
-      </div>
+      <div class="stat-value">{{ value }}</div>
+      <div class="stat-desc">{{ tips }}</div>
     </div>
-
   </div>
 </template>
 
 <style scoped></style>
-
