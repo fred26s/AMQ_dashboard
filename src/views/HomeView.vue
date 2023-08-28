@@ -3,8 +3,7 @@
 </script>
 
 <template>
-  <main>
-    <!-- <TheWelcome /> -->
-    homeview
+  <main class="h-52 flex justify-center">
+    <progress class="progress w-56"></progress>
   </main>
 </template>

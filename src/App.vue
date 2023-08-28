@@ -1,27 +1,26 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import footerBar from './components/footerBar.vue'
+import navBar from './components/navBar.vue'
+import theme from './components/theme.vue'
 
 </script>
 
 <template>
-  <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-
-  <!-- <HelloWorld msg="You did it!" /> -->
-
   <div class="container mx-auto">
-    <!-- <div class="flex justify-end space-x-5">
-    </div> -->
-    <div class="flex w-full">
-      <div class="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center">
+    <navBar>
+      <template v-slot:link1>
         <RouterLink class="w-full text-center" to="/">Home</RouterLink>
-      </div>
-      <div class="divider divider-horizontal"></div>
-      <div class="grid h-10 flex-grow card bg-base-300 rounded-box place-items-center">
+      </template>
+      <template v-slot:link2>
         <RouterLink class="w-full text-center" to="/about">About</RouterLink>
-      </div>
-    </div>
+      </template>
 
+
+      <template v-slot:btn1>
+        <theme></theme>
+      </template>
+    </navBar>
     <RouterView />
   </div>
   <footerBar></footerBar>
