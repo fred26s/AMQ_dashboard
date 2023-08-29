@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "axios": "^1.5.0",
     "echarts": "^5.4.3",
     "pinia": "^2.1.6",
     "theme-change": "^2.5.0",

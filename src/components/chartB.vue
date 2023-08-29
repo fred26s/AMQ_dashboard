@@ -3,6 +3,20 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  data1: {
+    type: Array,
+    default: []
+  },
+  data2: {
+    type: Array,
+    default: []
+  },
+  xdata: {
+    type: Array,
+    default: []
+  }
+})
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import {
@@ -11,13 +25,14 @@ import {
 } from 'echarts/components';
 // line
 import { LineChart } from 'echarts/charts';
-import { GridComponent,
+import {
+  GridComponent,
   LegendComponent,
- } from 'echarts/components';
+} from 'echarts/components';
 
 
 import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide } from 'vue';
+import { ref, provide, computed } from 'vue';
 
 use([
   LineChart,
@@ -30,10 +45,21 @@ use([
 
 provide(THEME_KEY, 'dark');
 
+const xdata = computed(() => props.xdata)
+const data1 = computed(() => props.data1)
+const data2 = computed(() => props.data2)
+
+
+setTimeout(() => {
+  console.log(VChart)
+}, 3000);
+
+
 const option = ref({
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: xdata
   },
   yAxis: [
     {
@@ -55,18 +81,20 @@ const option = ref({
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      // data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: data1,
       type: 'line',
-      name: "values",            
+      name: "values",
       yAxisIndex: 0,
       smooth: true
     },
     {
-      data: [10000, 11000, 12000, 11000, 12000, 10000, 9000],
+      // data: [10000, 11000, 12000, 11000, 12000, 10000, 9000],
+      data: data2,
       type: 'line',
       name: "price",
       yAxisIndex: 1,
-      smooth: true            
+      smooth: true
 
     }
   ]
