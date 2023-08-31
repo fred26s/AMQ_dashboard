@@ -12,7 +12,7 @@ import articleBar from '../components/articleBar.vue'
 let dataStats = ref({})
 
 onBeforeMount(async () => {
-  const { data, result, err } = useFetch('/amqboard/board', {
+  const { data, result, err } = useFetch('/summary/board', {
     method: 'post'
   })
   dataStats = result;

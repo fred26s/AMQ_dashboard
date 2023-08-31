@@ -3,6 +3,7 @@
 import axios from "axios";
 
 const service = axios.create({
+  baseURL: "/star_api",
     timeout: 1000 * 60 * 5,
     headers: {}
 });
