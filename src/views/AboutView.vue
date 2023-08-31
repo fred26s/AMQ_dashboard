@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref, computed, toValue } from 'vue'
+import { onBeforeMount, ref, computed, toValue, watchEffect, unref } from 'vue'
 import { useFetch } from "../http/api"
 
 
@@ -9,16 +9,30 @@ import chartA from '../components/chartA.vue'
 import chartB from '../components/chartB.vue'
 import articleBar from '../components/articleBar.vue'
 
+import { useCounterStore } from "../stores/index"
+const counterStore = useCounterStore()
+// 使用 counterStore 中的状态和方法
+
 let dataStats = ref({})
 
-onBeforeMount(async () => {
-  const { data, result, err } = useFetch('/summary/board', {
-    method: 'post'
+const fetchData = async (type) => {
+  const data = {
+    type
+  }
+  const { result, err } = await useFetch('/summary/board', {
+    method: 'post',
+    data
   })
-  dataStats = result;
-  console.log(data, err)
-  console.log('---')
-  console.log(dataStats)
+  dataStats.value = result.value;
+}
+
+// 切换 type 后查询面板数据
+watchEffect(() => {
+  fetchData(counterStore.pageType)
+})
+
+onBeforeMount(async () => {
+  fetchData(counterStore.pageType)
 })
 
 // 资产
@@ -56,7 +70,7 @@ const chartYdata2 = computed(() => toValue(tradesList).map(e => e.sell.price))
     </div>
     <div class="flex flex-col space-y-5 space-x-2 md:flex-row mt-3">
       <div class="h-96 md:w-1/2">
-        <chartB :xdata="chartXdata" :data1="chartYdata1" :data2="chartYdata2" ></chartB>
+        <chartB :xdata="chartXdata" :data1="chartYdata1" :data2="chartYdata2"></chartB>
       </div>
       <!-- <chartA></chartA> -->
     </div>

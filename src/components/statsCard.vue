@@ -1,13 +1,13 @@
 <script setup>
 defineProps({
   label: {
-    type: String || Number
+    type: [String, Number]
   },
   value: {
-    type: String || Number
+    type: [String, Number]
   },
   tips: {
-    type: String || Number
+    type: [String, Number]
   }
 })
 </script>

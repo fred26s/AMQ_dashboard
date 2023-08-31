@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import footerBar from './components/footerBar.vue'
 import navBar from './components/navBar.vue'
 import theme from './components/theme.vue'
+import type from './components/type.vue'
 
 </script>
 
@@ -20,6 +21,11 @@ import theme from './components/theme.vue'
       <template v-slot:btn1>
         <theme></theme>
       </template>
+
+      <template v-slot:btn2>
+        <type></type>
+      </template>
+
     </navBar>
     <RouterView />
   </div>
