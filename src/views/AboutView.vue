@@ -16,14 +16,22 @@ const counterStore = useCounterStore()
 let dataStats = ref({})
 
 const fetchData = async (type) => {
-  const data = {
-    type
+  // 默认使用 realtime，查看线上实时策略状态
+  if (type === 'realtime') {
+    const data = {
+      type
+    }
+    const { result, err } = await useFetch('/summary/board', {
+      method: 'post',
+      data
+    })
+    dataStats.value = result.value;
+  } else {
+    // 切换对应的回测数据
+    const data = counterStore.dataSource[type]
+    dataStats.value = data;
   }
-  const { result, err } = await useFetch('/summary/board', {
-    method: 'post',
-    data
-  })
-  dataStats.value = result.value;
+
 }
 
 // 切换 type 后查询面板数据

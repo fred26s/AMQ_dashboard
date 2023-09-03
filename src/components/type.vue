@@ -8,35 +8,36 @@ defineProps({
   }
 })
 
-import { themeChange } from 'theme-change'
 import { ref, computed } from 'vue'
-const theme = ['cupcake', 'dark']
-let themeName = ref('dark')
+
 import { useCounterStore } from "../stores/index"
+import { importAllJson } from '../utils';
 
 const counter = useCounterStore()
+// 增加default选项，用以切换回实时看板，查询接口获取数据
+let filenameList = ref(['realtime'])
 
-const pageType = counter.pageType
-// 使用 counterStore 中的状态和方法
-const handleChange = (type) => {
-  console.log(type)
-  if (type === 1) {
-    counter.pageBacktest()
-  } else {
-    counter.pageDefault()
-  }
+
+const initAllJson = async () => {
+  const allJson = await importAllJson();
+  filenameList.value = filenameList.value.concat(Object.keys(allJson)) 
+  counter.setDataSource(allJson)
 }
+const handleChange = (sourceName) => {
+  counter.setPageSourceName(sourceName)
+}
+
+initAllJson()
+
 </script>
 
 <template>
-  <label class="swap swap-flip text-4xl">
-
-    <!-- this hidden checkbox controls the state -->
-    <input type="checkbox" />
-
-    <div class="swap-on" @click="handleChange(1)">😈</div>
-    <div class="swap-off" @click="handleChange(2)">😇</div>
-  </label>
+  <div class="dropdown dropdown-end">
+    <label tabindex="0" class="btn m-1">Aura</label>
+    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+      <li v-for="e in filenameList" :key="i" @click="handleChange(e)"><a>{{ e }}</a></li>
+    </ul>
+  </div>
 </template>
 
 <style scoped></style>
