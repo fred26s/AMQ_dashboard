@@ -10,6 +10,13 @@ defineProps({
     type: String || Number
   }
 })
+import { useCounterStore } from "../stores/index"
+import { computed, toValue } from 'vue'
+
+const counter = useCounterStore()
+
+const title = computed(() => toValue(counter.pageType) === 'realtime' ? 'StarBoard' : counter.pageType)
+
 </script>
 
 <template>
@@ -32,7 +39,7 @@ defineProps({
       </div>
     </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost normal-case text-xl">StarBoard</a>
+      <a class="btn btn-ghost normal-case text-xl">{{ title }}</a>
     </div>
     <div class="navbar-end">
       <!-- <button class="btn btn-ghost btn-circle">
