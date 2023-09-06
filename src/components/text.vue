@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   msgPre: {
@@ -21,14 +21,15 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 function updateValue(value) {
-  console.dir(value)
-  console.log(value)
   emit('update:modelValue', value)
 }
 </script>
 
 <template>
-  <input type="text" :placeholder="placeholder" class="input input-bordered w-full max-w-xs" @input="updateValue($event.target.value)" />
+  <span class="flex items-baseline">
+    <span class="text-2xl mr-3 w-48 overflow-hidden text-ellipsis">{{ msgPre }}</span>
+    <input type="text" :placeholder="placeholder" class="input input-bordered w-full max-w-xs" @input="updateValue($event.target.value)" />
+  </span>
 </template>
 
 

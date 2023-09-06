@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   msgPre: {
@@ -11,6 +11,12 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
+  },
+  type: {
+    type: String,
+  },
+  size:{
+    type: String,
   }
 })
 
@@ -24,9 +30,10 @@ function updateValue(checked) {
 <template>
   <div class="form-control">
     <label class="label cursor-pointer">
-      <span class="label-text">{{ msgPre }}</span>
-      <input type="checkbox" class="toggle" :checked="modelValue" @change="updateValue($event.target.checked)" />
-      <span class="label-text">{{ msgNext }}</span>
+      <span :class="['label-text', `text-${type}`]">{{ msgPre }}</span>
+      <input type="checkbox" :class="['toggle', `toggle-${type}`, `toggle-${size}`]" :checked="modelValue"
+        @change="updateValue($event.target.checked)" />
+      <span :class="['label-text', `text-${type}`]">{{ msgNext }}</span>
     </label>
   </div>
 </template>

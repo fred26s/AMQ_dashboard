@@ -40,20 +40,47 @@ onBeforeMount(async () => {
 
 <template>
   <div class="container mx-auto flex flex-col">
-    <div class="flex">
-      button
+    <div class="flex justify-between">
+      <toggle class="" msgPre="真实交易" msgNext="" type="success" size="lg" v-model="toggleValue"></toggle>
+      <button class="btn btn-circle btn-accent">刷新</button>
     </div>
-    <div class="flex flex-col">
-      <div class="flex">
-        <toggle msgPre="Buy" msgNext="Sell" v-model="toggleValue"></toggle>
-        <textBar v-model="txt"></textBar>
+
+
+
+    <div class="indicator w-full mt-5">
+      <div class="indicator-item indicator-bottom">
+        <button class="btn btn-primary">Apply</button>
       </div>
-      <div class="flex">
-        toggle + input
+      <div class="card border w-full">
+        <div class="card-body">
+          <h2 class="card-title">指令</h2>
+          <div class="flex flex-col w-full lg:flex-row">
+            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
+              <div class="flex items-center">
+                <toggle class="mr-5" msgPre="Buy" msgNext="Sell" type="success" v-model="toggleValue"></toggle>
+                <div v-if="toggleValue" class="flex flex-col">
+                  <textBar msgPre="openPrice" v-model="txt"></textBar>
+                </div>
+              </div>
+            </div>
+            <div class="divider lg:divider-horizontal">OR</div>
+            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
+              <div class="flex items-center mt-3">
+                <toggle class="mr-5" msgPre="Buy" msgNext="Sell" type="error" v-model="toggleValue"></toggle>
+                <div class="flex flex-col">
+                  <textBar msgPre="stopProfit" v-model="txt"></textBar>
+                  <textBar class="mt-5" msgPre="stopLoss" v-model="txt"></textBar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="flex">
-      submit
+
+
+    <div class="flex justify-start mt-3">
+      <!-- <button class="btn btn-primary w-1/2">发布</button> -->
     </div>
   </div>
 </template>
