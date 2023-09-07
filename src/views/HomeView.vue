@@ -1,6 +1,6 @@
 <script setup>
 import { useFetch } from "../http/api"
-import { onBeforeMount, ref, computed, toValue, watchEffect, unref } from 'vue'
+import { onBeforeMount, ref, computed, toValue, watchEffect, unref, watch } from 'vue'
 import toggle from '../components/toggle.vue'
 import textBar from '../components/text.vue'
 
@@ -53,22 +53,40 @@ const fetchData = async (params) => {
   priceOpend.value = priceOpen;
 }
 
-const setData = async (params) => {
+const setData = async () => {
   // 默认使用 realtime，查看线上实时策略状态
   const data = {
-    ...params
+    enableTrade: triggerTrade.value,
+    enableBuy: triggerBuy.value,
+    enableSell: triggerSell.value,
+    stopProfit: priceStopProfit.value,
+    stopLoss: priceStopLoss.value,
+    priceOpen: priceOpend.value,
   }
-  const { result, err } = await useFetch('/summary/board', {
+  const { result, err } = await useFetch('/shadow/sun', {
     method: 'post',
     data
   })
-  dataInfo.value = result.value;
+  console.log(result)
 
 }
 
 onBeforeMount(async () => {
   fetchData()
 })
+
+watch(triggerSell, (newValue) => {
+  if (!newValue) {
+    priceStopLoss.value = ''
+    priceStopProfit.value = ''
+  }
+})
+watch(triggerBuy, (newValue) => {
+  if (!newValue) {
+    priceOpend.value = ''
+  }
+})
+
 
 </script>
 
@@ -81,7 +99,7 @@ onBeforeMount(async () => {
 
     <div class="indicator w-full mt-5">
       <div class="indicator-item indicator-bottom indicator-center w-20">
-        <button class="btn btn-primary w-20">Apply</button>
+        <button class="btn btn-primary w-20" @click="setData">Apply</button>
       </div>
 
       <div class="card border w-full">

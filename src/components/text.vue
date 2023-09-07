@@ -13,7 +13,7 @@ const props = defineProps({
     default: "Type here"
   },
   modelValue: {
-    type: String,
+    type: [String, Number],
     default: false
   },
   size: {

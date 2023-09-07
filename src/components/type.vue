@@ -35,7 +35,7 @@ initAllJson()
   <div class="dropdown dropdown-end">
     <label tabindex="0" class="btn m-1">Aura</label>
     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-      <li v-for="e in filenameList" :key="i" @click="handleChange(e)"><a>{{ e }}</a></li>
+      <li v-for="(e, i) in filenameList" :key="i" @click="handleChange(e)"><a>{{ e }}</a></li>
     </ul>
   </div>
 </template>
