@@ -15,7 +15,7 @@ const props = defineProps({
   type: {
     type: String,
   },
-  size:{
+  size: {
     type: String,
   }
 })
@@ -31,7 +31,7 @@ function updateValue(checked) {
   <div class="form-control">
     <label class="label cursor-pointer">
       <span :class="['label-text', `text-${type}`]">{{ msgPre }}</span>
-      <input type="checkbox" :class="['toggle', `toggle-${type}`, `toggle-${size}`]" :checked="modelValue"
+      <input type="checkbox" :class="['toggle',  type, size]" :checked="modelValue"
         @change="updateValue($event.target.checked)" />
       <span :class="['label-text', `text-${type}`]">{{ msgNext }}</span>
     </label>
