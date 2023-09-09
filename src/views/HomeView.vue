@@ -3,6 +3,7 @@ import { useFetch } from "../http/api"
 import { onBeforeMount, ref, computed, toValue, watchEffect, unref, watch } from 'vue'
 import toggle from '../components/toggle.vue'
 import textBar from '../components/text.vue'
+import toastBar from '../components/toast.vue'
 
 let dataInfo = ref({})
 
@@ -21,6 +22,8 @@ let priceStopLoss = ref("")
 // 开仓价
 let priceOpend = ref("")
 
+const toast = ref(null)
+
 const fetchData = async (params) => {
   // 默认使用 realtime，查看线上实时策略状态
   const data = {
@@ -31,7 +34,12 @@ const fetchData = async (params) => {
     data
   })
   dataInfo.value = result.value;
-
+  
+  if (!err) {
+    toast.value.open({type: 'alert-success', msg: 'Refresh'})
+  } else {
+    toast.value.open({type: 'alert-error', msg: err})
+  }
 
   const {
     enableTrade,
@@ -67,7 +75,12 @@ const setData = async () => {
     method: 'post',
     data
   })
-  console.log(result)
+
+  if (!err) {
+    toast.value.open({type: 'alert-success', msg: 'Submit'})
+  } else {
+    toast.value.open({type: 'alert-error', msg: err})
+  }
 
 }
 
@@ -102,11 +115,11 @@ watch(triggerBuy, (newValue) => {
         <button class="btn btn-primary w-20" @click="setData">Apply</button>
       </div>
 
-      <div class="card border w-full">
+      <div :class="['card', 'border', 'w-full']">
         <div class="card-body">
           <h2 class="card-title">指令</h2>
           <div class="flex flex-col w-full lg:flex-row">
-            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
+            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center card-bordered" :class="[triggerTrade? 'border-primary':'']">
               <div class="flex items-center">
                 <toggle class="mr-5" msgPre="Buy" msgNext="Signal" type="toggle-success" v-model="triggerBuy"></toggle>
                 <div v-show="triggerBuy" class="flex flex-col">
@@ -117,7 +130,7 @@ watch(triggerBuy, (newValue) => {
 
             <div class="divider lg:divider-horizontal">OR</div>
 
-            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
+            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center card-bordered" :class="[triggerTrade? 'border-primary-focus':'']">
               <div class="flex items-center mt-3">
                 <toggle class="mr-5" msgPre="Sell" msgNext="Signal" type="toggle-error" v-model="triggerSell"></toggle>
                 <div v-show="triggerSell" class="flex flex-col">
@@ -130,7 +143,7 @@ watch(triggerBuy, (newValue) => {
         </div>
       </div>
     </div>
-
+    <toastBar ref="toast"></toastBar>
 
     <div class="flex justify-start mt-3">
       <!-- <button class="btn btn-primary w-1/2">发布</button> -->
