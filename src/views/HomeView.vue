@@ -21,6 +21,10 @@ let priceStopLoss = ref("")
 // 开仓价
 let priceOpend = ref("")
 
+// 倍率
+let ratioOpen = ref(1)
+
+
 const fetchData = async (params) => {
   // 默认使用 realtime，查看线上实时策略状态
   const data = {
@@ -34,6 +38,7 @@ const fetchData = async (params) => {
 
 
   const {
+    ratio,
     enableTrade,
     enableSell,
     enableBuy,
@@ -51,6 +56,7 @@ const fetchData = async (params) => {
   priceStopProfit.value = stopProfit;
   priceStopLoss.value = stopLoss;
   priceOpend.value = priceOpen;
+  ratioOpen.value = ratio;
 }
 
 const setData = async () => {
@@ -62,6 +68,7 @@ const setData = async () => {
     stopProfit: priceStopProfit.value,
     stopLoss: priceStopLoss.value,
     priceOpen: priceOpend.value,
+    ratio: ratioOpen.value,
   }
   const { result, err } = await useFetch('/shadow/sun', {
     method: 'post',
@@ -73,18 +80,6 @@ const setData = async () => {
 
 onBeforeMount(async () => {
   fetchData()
-})
-
-watch(triggerSell, (newValue) => {
-  if (!newValue) {
-    priceStopLoss.value = ''
-    priceStopProfit.value = ''
-  }
-})
-watch(triggerBuy, (newValue) => {
-  if (!newValue) {
-    priceOpend.value = ''
-  }
 })
 
 
@@ -109,8 +104,9 @@ watch(triggerBuy, (newValue) => {
             <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
               <div class="flex items-center">
                 <toggle class="mr-5" msgPre="Buy" msgNext="Signal" type="toggle-success" v-model="triggerBuy"></toggle>
-                <div v-show="triggerBuy" class="flex flex-col">
+                <div class="flex flex-col">
                   <textBar msgPre="买入价" size="sm" v-model="priceOpend"></textBar>
+                  <textBar msgPre="杠杆" size="sm" v-model.number="ratioOpen" class="mt-5"></textBar>
                 </div>
               </div>
             </div>
@@ -120,7 +116,7 @@ watch(triggerBuy, (newValue) => {
             <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center">
               <div class="flex items-center mt-3">
                 <toggle class="mr-5" msgPre="Sell" msgNext="Signal" type="toggle-error" v-model="triggerSell"></toggle>
-                <div v-show="triggerSell" class="flex flex-col">
+                <div class="flex flex-col">
                   <textBar msgPre="止损价" v-model="priceStopLoss"></textBar>
                   <textBar class="mt-5" msgPre="止盈价" v-model="priceStopProfit"></textBar>
                 </div>
