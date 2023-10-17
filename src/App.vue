@@ -14,7 +14,10 @@ import type from './components/type.vue'
         <RouterLink class="w-full text-center" to="/">Home</RouterLink>
       </template>
       <template v-slot:link2>
-        <RouterLink class="w-full text-center" to="/about">About</RouterLink>
+        <RouterLink class="w-full text-center" to="/about">Order</RouterLink>
+      </template>
+      <template v-slot:link3>
+        <RouterLink class="w-full text-center" to="/news">News</RouterLink>
       </template>
 
 

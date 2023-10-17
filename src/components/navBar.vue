@@ -28,12 +28,15 @@ const title = computed(() => toValue(counter.pageType) === 'realtime' ? 'StarBoa
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
           </svg>
         </label>
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-          <li>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow bg-base-100 rounded-box w-52">
+          <li @click.stop="()=>{}">
             <slot name="link1"></slot>
           </li>
           <li>
             <slot name="link2"></slot>
+          </li>
+          <li>
+            <slot name="link3"></slot>
           </li>
         </ul>
       </div>
