@@ -26,6 +26,10 @@ const toast = ref(null)
 // 倍率
 let ratioOpen = ref(1)
 
+// 提醒开关
+let enableTips = ref(false)
+// 提醒价
+let tipsPrice = ref("")
 
 const fetchData = async (params) => {
   // 默认使用 realtime，查看线上实时策略状态
@@ -45,6 +49,8 @@ const fetchData = async (params) => {
   }
 
   const {
+    enableTips: enableTipsTmp,
+    tipsPrice: tipsPriceTmp,
     ratio,
     enableTrade,
     enableSell,
@@ -64,11 +70,16 @@ const fetchData = async (params) => {
   priceStopLoss.value = stopLoss;
   priceOpend.value = priceOpen;
   ratioOpen.value = ratio;
+
+  enableTips.value = enableTipsTmp;
+  tipsPrice.value = tipsPriceTmp;
 }
 
 const setData = async () => {
   // 默认使用 realtime，查看线上实时策略状态
   const data = {
+    enableTips: enableTips.value,
+    tipsPrice: tipsPrice.value,
     enableTrade: triggerTrade.value,
     enableBuy: triggerBuy.value,
     enableSell: triggerSell.value,
@@ -131,6 +142,25 @@ onBeforeMount(async () => {
                 <div class="flex flex-col">
                   <textBar msgPre="止损价" v-model="priceStopLoss"></textBar>
                   <textBar class="mt-5" msgPre="止盈价" v-model="priceStopProfit"></textBar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="indicator w-full mt-5">
+      <div :class="['card', 'border', 'w-full']">
+        <div class="card-body">
+          <h2 class="card-title">提醒</h2>
+          <div class="flex flex-col w-full lg:flex-row">
+            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center card-bordered" :class="[triggerTrade? 'border-primary':'']">
+              <div class="flex items-center">
+                <toggle class="mr-5" msgPre="Buy" msgNext="Signal" type="toggle-info" v-model="enableTips"></toggle>
+                <div class="flex flex-col">
+                  <textBar msgPre="提醒价" size="sm" v-model="tipsPrice"></textBar>
                 </div>
               </div>
             </div>
