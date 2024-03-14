@@ -38,6 +38,9 @@ const title = computed(() => toValue(counter.pageType) === 'realtime' ? 'StarBoa
           <li>
             <slot name="link3"></slot>
           </li>
+          <li>
+            <slot name="link4"></slot>
+          </li>
         </ul>
       </div>
     </div>

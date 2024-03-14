@@ -19,6 +19,9 @@ import type from './components/type.vue'
       <template v-slot:link3>
         <RouterLink class="w-full text-center" to="/news">News</RouterLink>
       </template>
+      <template v-slot:link4>
+        <RouterLink class="w-full text-center" to="/monitor">Monitor</RouterLink>
+      </template>
 
 
       <template v-slot:btn1>
