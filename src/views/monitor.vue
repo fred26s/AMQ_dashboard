@@ -2,8 +2,12 @@
 import { useFetch } from "../http/api";
 import { onBeforeMount, ref } from "vue";
 import toastBar from "../components/toast.vue";
+import toggle from '../components/toggle.vue'
 
+// 看板列表
 let dataInfo = ref({});
+// 交易模块
+let triggerTrade = ref(false)
 
 const toast = ref(null);
 
@@ -16,10 +20,12 @@ const fetchData = async (params) => {
     method: "post",
     data,
   });
+  const { status, enable } = result.value;
+  const statusMap = status;
+  triggerTrade.value = enable == 0 ? false : true;
 
-  const resMap = Object.keys(result.value).map(key => {
-    const item = result.value[key];
-    console.log(item, key)
+  const resMap = Object.keys(statusMap).map(key => {
+    const item = statusMap[key];
     const itemParse = item.split('|');
 
     // const status = Number(itemParse[0]);
@@ -47,6 +53,26 @@ const fetchData = async (params) => {
     toast.value.open({ type: "alert-error", msg: err });
   }
 };
+
+
+const handleUpdate = async() => {
+  console.log('handleUpdate')
+  // 默认使用 realtime，查看线上实时策略状态
+  const data = {
+    enableTips: triggerTrade.value ? 1 : 0,
+  }
+  const { result, err } = await useFetch('/monitor/sun', {
+    method: 'post',
+    data
+  })
+
+  if (!err) {
+    toast.value.open({type: 'alert-success', msg: 'Submit'})
+  } else {
+    toast.value.open({type: 'alert-error', msg: err})
+  }
+
+}
 
 // 距今时间显示
 const formatTimestampAgo = (timestamp) => {
@@ -111,9 +137,10 @@ onBeforeMount(async () => {
     <div class="flex flex-col w-full min-h-screen">
       <main
         class="flex min-h-[calc(100vh-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
-        <div class="max-w-6xl w-full mx-auto flex justify-end items-center gap-4">
-          <button @click="fetchData"
-            class="btn btn-circle btn-primary">
+        <div class="max-w-6xl w-full mx-auto flex justify-between items-center gap-4">
+          <toggle class="" msgPre="邮件预警" msgNext="" type="toggle-success" size="toggle-lg" v-model="triggerTrade" @update="handleUpdate"></toggle>
+
+          <button @click="fetchData" class="btn btn-circle btn-primary">
             刷新
           </button>
         </div>

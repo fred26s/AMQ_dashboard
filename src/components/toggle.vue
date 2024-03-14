@@ -24,6 +24,7 @@ const emit = defineEmits(['update:modelValue'])
 
 function updateValue(checked) {
   emit('update:modelValue', checked)
+  emit('update')
 }
 </script>
 
