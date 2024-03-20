@@ -11,16 +11,21 @@ import type from './components/type.vue'
   <div class="container mx-auto">
     <navBar>
       <template v-slot:link1>
-        <RouterLink class="w-full text-center" to="/">Home</RouterLink>
-      </template>
-      <template v-slot:link2>
-        <RouterLink class="w-full text-center" to="/about">Order</RouterLink>
-      </template>
-      <template v-slot:link3>
-        <RouterLink class="w-full text-center" to="/news">News</RouterLink>
-      </template>
-      <template v-slot:link4>
-        <RouterLink class="w-full text-center" to="/monitor">Monitor</RouterLink>
+        <li>
+          <RouterLink class="w-full text-center" to="/">Home</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/about">Order</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/news">News</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/monitor">Monitor</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/trace">Trace</RouterLink>
+        </li>
       </template>
 
 

@@ -61,7 +61,7 @@ const handleUpdate = async() => {
   const data = {
     enableTips: triggerTrade.value ? 1 : 0,
   }
-  const { result, err } = await useFetch('/monitor/sun', {
+  const { err } = await useFetch('/monitor/sun', {
     method: 'post',
     data
   })
@@ -136,7 +136,7 @@ onBeforeMount(async () => {
   <div class="container mx-auto flex flex-col">
     <div class="flex flex-col w-full min-h-screen">
       <main
-        class="flex min-h-[calc(100vh-_theme(spacing.16))] bg-gray-100/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 dark:bg-gray-800/40">
+        class="flex min-h-[calc(100vh-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
         <div class="max-w-6xl w-full mx-auto flex justify-between items-center gap-4">
           <toggle class="" msgPre="邮件预警" msgNext="" type="toggle-success" size="toggle-lg" v-model="triggerTrade" @update="handleUpdate"></toggle>
 

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import newsView from '../views/news.vue'
 import monitorView from '../views/monitor.vue'
+import traceView from '../views/trace.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/monitor',
       name: 'monitor',
       component: monitorView
+    },
+    {
+      path: '/trace',
+      name: 'trace',
+      component: traceView
     }
   ]
 })
