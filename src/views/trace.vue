@@ -1,8 +1,9 @@
 <script setup>
 import { useFetch } from "../http/api";
-import { onBeforeMount, ref, computed } from "vue";
+import { onBeforeMount, ref } from "vue";
 import toastBar from "../components/toast.vue";
 // import toggle from '../components/toggle.vue'
+import { useHighlightLogic } from "./composables/useHighlightLogic";
 
 // 看板列表
 // let dataInfo = ref({});
@@ -23,14 +24,8 @@ let trigger = ref([
 // 交易模块
 // let triggerTrade = ref(false)
 
-let flag = computed(() => {
-  // 若item.pathFlag 中某一项以trigger结尾
-  // 则表示策略为待捕捉状态
-  return trigger.value.some(e => {
-    return  traceItem.value.pathFlag.endsWith(e.join(','))
-  })
-})
-
+// 计算高亮横盘价格的位置
+const { highlightIndex, flag, highlightTrigger } = useHighlightLogic(traceItem, trigger);
 
 const toast = ref(null);
 
@@ -113,7 +108,7 @@ onBeforeMount(async () => {
             <tbody>
               <!-- row 1 -->
               <!-- 高亮背景显示 -->
-              <tr v-for="(e, i) in trigger" :key="i" :class="traceItem.pathFlag.endsWith(e.join(',')) ? 'bg-primary' : ''">
+              <tr v-for="(e, i) in trigger" :key="i" :class="highlightTrigger[i] ? 'bg-primary' : ''">
                 <th>({{ i + 1 }})</th>
                 <td>{{ e.join(',') }}</td>
               </tr>
@@ -130,7 +125,13 @@ onBeforeMount(async () => {
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
               <div class="grid gap-1">
-                <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">焦油策略</h3>
+                <h3 class="text-2xl font-semibold whitespace-nowrap leading-none tracking-tight">焦油策略
+                  <!-- 是否买入标识 -->
+                  <div v-if="traceItem.status == 1" class="badge badge-success">已买入</div>
+                  <div v-else class="badge badge-error">未买入</div>
+                  <!-- 最新价格 -->
+                  <span class="badge badge-accent badge-outline">最新价格: {{ traceItem.price }}</span>
+                </h3>
                 <p class="text-sm text-muted-foreground">{{ traceItem.pathFlag }}</p>
                 <!-- <p v-for="(eFLag, eIndex) in traceItem.pathFlagList" :key="eIndex" class="text-sm text-muted-foreground">{{ eFLag }} - {{ traceItem.cloudSMAList[eIndex] }}</p> -->
               </div>
@@ -151,7 +152,7 @@ onBeforeMount(async () => {
               </div>
             </div>
             <div class="p-6 pt-0 pb-0 flex flex-col items-start gap-2">
-              <p v-for="(eFLag, eIndex) in traceItem.pathFlagList" :key="eIndex" class="text-sm text-muted-foreground">{{ eFLag }} - {{ Number(traceItem.cloudSMAList[eIndex]).toFixed(3) }}</p>
+              <p v-for="(eFLag, eIndex) in traceItem.pathFlagList" :key="eIndex" class="text-sm text-muted-foreground" :class="{ 'text-primary': eIndex == highlightIndex }">{{ eFLag }} - {{ Number(traceItem.cloudSMAList[eIndex]).toFixed(3) }}</p>
               </div>
             <div class="p-6 flex flex-col items-start gap-2">
               <div class="text-sm font-semibold">
