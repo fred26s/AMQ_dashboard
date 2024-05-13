@@ -1,5 +1,5 @@
 <template>
-  <v-chart class="" :option="option" autoresize />
+  <v-chart ref="chartRef" class="" :option="option" autoresize />
 </template>
 
 <script setup>
@@ -32,7 +32,24 @@ import {
 
 
 import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide, computed } from 'vue';
+import { ref, provide, computed, onMounted, defineEmits } from 'vue';
+
+const chartRef = ref(null);
+const emit = defineEmits(['clickChart']); // 声明要触发的事件
+
+onMounted(() => {
+  if (chartRef.value) {
+    console.log(chartRef.value)
+    console.log('chartRef.value')
+    chartRef.value.chart.on('click', function (params) {
+      // 在这里处理点击事件
+      console.log('Data:', params.data);
+      console.log('params:', params);
+      emit('clickChart', params); // 触发事件并传递数据
+    });
+  }
+});
+
 
 use([
   LineChart,

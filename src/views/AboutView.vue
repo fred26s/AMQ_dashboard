@@ -3,11 +3,14 @@ import { onBeforeMount, ref, computed, toValue, watchEffect, unref } from 'vue'
 import { useFetch } from "../http/api"
 
 
+
 import stats from '../components/stats.vue'
 import statsCard from '../components/statsCard.vue'
 import chartA from '../components/chartA.vue'
 import chartB from '../components/chartB.vue'
 import articleBar from '../components/articleBar.vue'
+import TradingViewChart from '../components/TradingViewChart.vue';
+import tradeDetail from '../components/tradeDetail.vue';
 
 import { useCounterStore } from "../stores/index"
 const counterStore = useCounterStore()
@@ -61,6 +64,20 @@ const chartXdata = computed(() => toValue(tradesList).map(e => new Date(e.sell.t
 const chartYdata1 = computed(() => toValue(tradesList).map(e => e.sell.revenue))
 const chartYdata2 = computed(() => toValue(tradesList).map(e => e.sell.price))
 
+// tradingview图表
+const chartId = ref(null)
+
+const traderCurrent = ref({})
+const handleClickChart = (trade) => {
+  console.log('trade: ', trade);
+  const {dataIndex} = trade;
+  traderCurrent.value = tradesList.value[dataIndex];
+  const {extra} = traderCurrent.value;
+  const {chart} = extra;
+  console.log('tradesList.value[dataIndex]: ', tradesList.value[dataIndex]);
+  
+  chartId.value = chart
+}
 
 </script>
 
@@ -76,9 +93,18 @@ const chartYdata2 = computed(() => toValue(tradesList).map(e => e.sell.price))
     <div class="flex mt-3">
       <!-- <articleBar></articleBar> -->
     </div>
-    <div class="flex flex-col space-y-5 space-x-2 md:flex-row mt-3">
-      <div class="h-96 md:w-1/2">
-        <chartB :xdata="chartXdata" :data1="chartYdata1" :data2="chartYdata2"></chartB>
+    <div class="flex flex-col space-y-5 md:space-y-0 md:space-x-2 md:flex-row mt-3">
+      <div class="h-96 md:h-auto md:w-1/2">
+        <chartB :xdata="chartXdata" :data1="chartYdata1" :data2="chartYdata2" @clickChart="handleClickChart"></chartB>
+      </div>
+      <div class="h-auto md:h-auto md:w-1/2">
+        <tradeDetail :info="traderCurrent"/>
+      </div>
+      <div class="h-96 md:h-auto md:w-1/2">
+        <!-- TradingView Chart BEGIN -->
+
+        <trading-view-chart :chartId="chartId"></trading-view-chart>
+        <!-- TradingView Chart END -->
       </div>
       <!-- <chartA></chartA> -->
     </div>
