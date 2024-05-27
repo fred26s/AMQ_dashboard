@@ -21,6 +21,14 @@ let priceStopLoss = ref("")
 
 // 开仓价
 let priceOpend = ref("")
+// 触发价
+const priceTrigger = ref("")
+// 取消价
+const priceCancels = ref("")
+// 是否开启取消价
+const enablePriceCancels = ref(false)
+// 买入状态
+const boughtStatus = ref('')
 
 const toast = ref(null)
 // 倍率
@@ -57,7 +65,11 @@ const fetchData = async (params) => {
     enableBuy,
     stopProfit,
     stopLoss,
-    priceOpen
+    priceOpen,
+    triggerPrice,
+    priceCancel,
+    enablePriceCancel,
+    bought
   } = result.value;
 
   console.log(stopProfit)
@@ -70,6 +82,10 @@ const fetchData = async (params) => {
   priceStopLoss.value = stopLoss;
   priceOpend.value = priceOpen;
   ratioOpen.value = ratio;
+  priceTrigger.value = triggerPrice;
+  priceCancels.value = priceCancel;
+  enablePriceCancels.value = enablePriceCancel;
+  boughtStatus.value = bought ? '已开仓' : '未开仓'
 
   enableTips.value = enableTipsTmp;
   tipsPrice.value = tipsPriceTmp;
@@ -87,6 +103,9 @@ const setData = async () => {
     stopLoss: priceStopLoss.value,
     priceOpen: priceOpend.value,
     ratio: ratioOpen.value,
+    enablePriceCancel: enablePriceCancels.value,
+    priceCancel: priceCancels.value,
+    triggerPrice: priceTrigger.value
   }
   const { result, err } = await useFetch('/shadow/sun', {
     method: 'post',
@@ -122,14 +141,24 @@ onBeforeMount(async () => {
 
       <div :class="['card', 'border', 'w-full']">
         <div class="card-body">
-          <h2 class="card-title">指令</h2>
+          <h2 class="card-title flex justify-between">
+            <div>指令</div>
+            <!-- <div>{{ boughtStatus }}</div> -->
+            <div v-if="boughtStatus == '已开仓'" class="badge badge-outline badge-success">{{ boughtStatus }}</div>
+            <div v-else class="badge badge-outline badge-neutral">{{ boughtStatus }}</div>
+          </h2>
           <div class="flex flex-col w-full lg:flex-row">
-            <div class="grid flex-grow h-40 card bg-base-300 rounded-box place-items-center card-bordered" :class="[triggerTrade? 'border-primary':'']">
+            <div class="grid flex-grow h-auto py-5 card bg-base-300 rounded-box place-items-center card-bordered" :class="[triggerTrade? 'border-primary':'']">
               <div class="flex items-center">
                 <toggle class="mr-5" msgPre="Buy" msgNext="Signal" type="toggle-success" v-model="triggerBuy"></toggle>
                 <div class="flex flex-col">
-                  <textBar msgPre="买入价" size="sm" v-model="priceOpend"></textBar>
+                  <textBar msgPre="触发价" size="sm" v-model="priceTrigger"></textBar>
+                  <textBar msgPre="挂单价" size="sm" v-model="priceOpend" class="mt-5"></textBar>
+                  <textBar msgPre="取消价" size="sm" v-model="priceCancels" class="mt-5"></textBar>
                   <textBar msgPre="杠杆" size="sm" v-model.number="ratioOpen" class="mt-5"></textBar>
+                  <div class="divider lg:divider-horizontal">非必要</div>
+
+                  <toggle class="" msgPre="监测开关" msgNext="(是否取消挂单)" type="toggle-success" v-model="enablePriceCancels"></toggle>
                 </div>
               </div>
             </div>
