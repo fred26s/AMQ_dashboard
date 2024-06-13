@@ -64,6 +64,14 @@ const chartXdata = computed(() => toValue(tradesList).map(e => new Date(e.sell.t
 const chartYdata1 = computed(() => toValue(tradesList).map(e => e.sell.revenue))
 const chartYdata2 = computed(() => toValue(tradesList).map(e => e.sell.price))
 
+// 胜率统计
+const longWin = computed(() => toValue(tradesList).filter(e => e.extra.direction === 'long' && e.profit.amt > 0).length)
+const longTimes = computed(() => toValue(tradesList).filter(e => e.extra.direction === 'long').length)
+
+const shortWin = computed(() => toValue(tradesList).filter(e => e.extra.direction === 'short' && e.profit.amt > 0).length)
+const shortTimes = computed(() => toValue(tradesList).filter(e => e.extra.direction === 'short').length)
+
+
 // tradingview图表
 const chartId = ref(null)
 
@@ -89,6 +97,8 @@ const handleClickChart = (trade) => {
       <statsCard label="实际盈亏" :value="totalProfit" :tips="totalProfitPct"></statsCard>
       <statsCard label="胜率" :value="tradePctWon" tips=""></statsCard>
       <statsCard label="交易次数" :value="tradeTimes" :tips="tradeTimesTips"></statsCard>
+      <statsCard label="做多胜率" :value="`${longWin/longTimes*100}%`" :tips="`${longWin}/${longTimes}`"></statsCard>
+      <statsCard label="做空胜率" :value="`${shortWin/shortTimes*100}%`" :tips="`${shortWin}/${shortTimes}`"></statsCard>
     </div>
     <div class="flex mt-3">
       <!-- <articleBar></articleBar> -->
