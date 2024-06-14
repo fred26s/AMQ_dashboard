@@ -97,8 +97,8 @@ const handleClickChart = (trade) => {
       <statsCard label="实际盈亏" :value="totalProfit" :tips="totalProfitPct"></statsCard>
       <statsCard label="胜率" :value="tradePctWon" tips=""></statsCard>
       <statsCard label="交易次数" :value="tradeTimes" :tips="tradeTimesTips"></statsCard>
-      <statsCard label="做多胜率" :value="`${longWin/longTimes*100}%`" :tips="`${longWin}/${longTimes}`"></statsCard>
-      <statsCard label="做空胜率" :value="`${shortWin/shortTimes*100}%`" :tips="`${shortWin}/${shortTimes}`"></statsCard>
+      <statsCard label="做多胜率" :value="`${Math.floor(longWin/longTimes*100)}%`" :tips="`${longWin}/${longTimes}`"></statsCard>
+      <statsCard label="做空胜率" :value="`${Math.floor(shortWin/shortTimes*100)}%`" :tips="`${shortWin}/${shortTimes}`"></statsCard>
     </div>
     <div class="flex mt-3">
       <!-- <articleBar></articleBar> -->
