@@ -60,6 +60,25 @@ const fetchDataRefresh = async (params) => {
   }
 };
 
+const openBlank = (url) => {
+  // a标签打开新的链接tab页
+  window.open(url, "_blank");
+}
+// 使用标题的序号，匹配超链接url
+const patchLink = (title) => {
+  // 正则匹配title字段的[n] 中的n
+  const reg = /\[(\d+)\]/g
+  console.log('reg: ', reg);
+  const keyStr =  title.match(reg)[0]
+  const keyNum =  keyStr.slice(1, -1)
+  console.log('keyNum: ', keyNum);
+  
+  // 获取指定link url
+  const url = dataInfo.value.links[keyNum - 1]
+
+  openBlank(url)
+}
+
 onBeforeMount(async () => {
   fetchData();
 });
@@ -91,10 +110,14 @@ onBeforeMount(async () => {
             }
           "
         />
-        <div class="collapse-title text-xl font-medium">Bull News</div>
+        <div class="collapse-title text-xl font-medium">Bull News <div class="badge">{{ dataInfo.bull.length }}</div></div>
         <div class="collapse-content prose">
           <ul>
-            <li v-for="(e, k) in dataInfo.bull" :key="`bull-${k}`">{{ e }}</li>
+            <li v-for="(e, k) in dataInfo.bull" :key="`bull-${k}`">
+              <a class="link link-hover" @click="patchLink(e)">
+                {{ e }}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -111,10 +134,14 @@ onBeforeMount(async () => {
             }
           "
         />
-        <div class="collapse-title text-xl font-medium">Shit News</div>
+        <div class="collapse-title text-xl font-medium">Shit News <div class="badge">{{ dataInfo.bear.length }}</div></div>
         <div class="collapse-content prose">
           <ul>
-            <li v-for="(e, k) in dataInfo.bear" :key="`bear-${k}`">{{ e }}</li>
+            <li v-for="(e, k) in dataInfo.bear" :key="`bear-${k}`">
+              <a class="link link-hover" @click="patchLink(e)">
+                {{ e }}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
