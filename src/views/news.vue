@@ -68,10 +68,8 @@ const openBlank = (url) => {
 const patchLink = (title) => {
   // 正则匹配title字段的[n] 中的n
   const reg = /\[(\d+)\]/g
-  console.log('reg: ', reg);
   const keyStr =  title.match(reg)[0]
   const keyNum =  keyStr.slice(1, -1)
-  console.log('keyNum: ', keyNum);
   
   // 获取指定link url
   const url = dataInfo.value.links[keyNum - 1]
