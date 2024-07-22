@@ -27,6 +27,8 @@ const priceTrigger = ref("")
 const priceCancels = ref("")
 // 是否开启取消价
 const enablePriceCancels = ref(false)
+// 是否开启渔网下单(区间批量下单)
+const enableFishNet = ref(false)
 // 买入状态
 const boughtStatus = ref('')
 
@@ -69,6 +71,7 @@ const fetchData = async (params) => {
     triggerPrice,
     priceCancel,
     enablePriceCancel,
+    enableFishnetBuy,
     bought
   } = result.value;
 
@@ -85,6 +88,7 @@ const fetchData = async (params) => {
   priceTrigger.value = triggerPrice;
   priceCancels.value = priceCancel;
   enablePriceCancels.value = enablePriceCancel;
+  enableFishNet.value = enableFishnetBuy;
   boughtStatus.value = bought ? '已开仓' : '未开仓'
 
   enableTips.value = enableTipsTmp;
@@ -104,6 +108,7 @@ const setData = async () => {
     priceOpen: priceOpend.value,
     ratio: ratioOpen.value,
     enablePriceCancel: enablePriceCancels.value,
+    enableFishnetBuy: enableFishNet.value,
     priceCancel: priceCancels.value,
     triggerPrice: priceTrigger.value
   }
@@ -156,9 +161,12 @@ onBeforeMount(async () => {
                   <textBar msgPre="挂单价" size="sm" v-model="priceOpend" class="mt-5"></textBar>
                   <textBar msgPre="取消价" size="sm" v-model="priceCancels" class="mt-5"></textBar>
                   <textBar msgPre="杠杆" size="sm" v-model.number="ratioOpen" class="mt-5"></textBar>
-                  <div class="divider lg:divider-horizontal">非必要</div>
 
-                  <toggle class="" msgPre="监测开关" msgNext="(是否取消挂单)" type="toggle-success" v-model="enablePriceCancels"></toggle>
+                  <div class="divider lg:divider-horizontal">功能</div>
+                  <toggle class="" msgPre="渔网下单🐟" msgNext="(区间批量订单)" type="toggle-info" v-model="enableFishNet"></toggle>
+
+                  <div class="divider lg:divider-horizontal">非必要</div>
+                  <toggle class="" msgPre="监测开关👀" msgNext="(系统内部逻辑)" type="toggle-info" v-model="enablePriceCancels"></toggle>
                 </div>
               </div>
             </div>
