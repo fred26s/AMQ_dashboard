@@ -6,6 +6,8 @@ export function useFetch(url, option) {
     const data = ref({})
     const error = ref({})
     const result = ref({})
+    const code = ref(0)
+    const message = ref('')
     request({
       url,
       ...option
@@ -13,7 +15,9 @@ export function useFetch(url, option) {
       .then((res) => {
         data.value = res
         result.value = res.result
-        resolve({ data, result, error })
+        code.value = res.code
+        message.value = res.message
+        resolve({ data, result, error, code, message })
       })
       .catch((error) => {
         error.value = error;
