@@ -40,16 +40,11 @@ const fetchDataRefresh = async (params) => {
     const data = {
       ...params
     }
-    const {
-      result,
-      err,
-      code,
-      message
-    } = await useFetch('/news/sun', {
+    const { result, err, code, message } = await useFetch('/news/sun', {
       method: 'post',
       data
     })
-    console.log(code, result , message)
+    console.log(code, result, message)
 
     if (code.value == 1) {
       toast.value.open({ type: 'alert-success', msg: 'Refresh Remote' })
@@ -93,7 +88,17 @@ onBeforeMount(async () => {
       <div class="flex flex-col justify-center">
         <p class="prose">{{ dataInfo.date }}</p>
       </div>
-      <div class="overflow h-12 mr-5">
+      <div class="flex overflow h-12 mr-5">
+        <!-- 筛选后新闻数量/新闻总数 -->
+        <div class="text-xs mr-1 leading-10">
+          {{
+            `(${
+              dataInfo.links.filter((e) => {
+                return e !== '-'
+              }).length
+            }/${dataInfo.links.length})`
+          }}
+        </div>
         <button
           v-if="!loading"
           key="btn"
