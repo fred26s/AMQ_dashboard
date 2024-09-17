@@ -34,7 +34,7 @@ const title = computed(() => toValue(counter.pageType) === 'realtime' ? 'StarBoa
       </div>
     </div>
     <div class="navbar-center">
-      <a class="btn btn-ghost normal-case text-xl">{{ title }}</a>
+      <a class="btn btn-ghost normal-case text-xl" @click="$router.push('/')">{{ title }}</a>
     </div>
     <div class="navbar-end">
       <!-- <button class="btn btn-ghost btn-circle">
