@@ -9,6 +9,6 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from 'vue-clerk'
     </SignInButton>
   </SignedOut>
   <SignedIn>
-    <UserButton />
+    <UserButton afterSignOutUrl="https://callbackhell.xyz/amqboard" />
   </SignedIn>
 </template>

@@ -6,7 +6,7 @@ import theme from './components/theme.vue'
 // import type from './components/type.vue'
 import login from './components/login.vue'
 
-import { SignedIn, useOrganization, useUser } from 'vue-clerk'
+import { SignedIn, SignedOut, useOrganization, useUser } from 'vue-clerk'
 const { organization } = useOrganization()
 console.log('organization: ', organization)
 
@@ -49,12 +49,21 @@ console.log('user: ', user)
         <div class="mockup-code m-2">
           <pre data-prefix="$"><code>npm i StarBoard</code></pre>
           <pre data-prefix=">"><code>installing...</code></pre>
-          <pre data-prefix=">" class="bg-warning text-warning-content"><code>Error!</code></pre>
+          <pre data-prefix=">" class="bg-warning text-warning-content"><code>Warning!</code></pre>
           <pre data-prefix=">"><code>Seems you don't have enough access.</code></pre>
           <pre data-prefix=">"><code>Sorry about that...</code></pre>
         </div>
       </div>
     </SignedIn>
+    <SignedOut>
+      <div class="mockup-code m-2">
+        <pre data-prefix="$"><code>npm i StarBoard</code></pre>
+        <pre data-prefix=">"><code>installing...</code></pre>
+        <pre data-prefix=">" class="bg-error text-error-content"><code>Error!</code></pre>
+        <pre data-prefix=">"><code>Seems you haven't logged in yet..</code></pre>
+        <pre data-prefix=">"><code>Sorry about that...</code></pre>
+      </div>
+    </SignedOut>
   </div>
   <footerBar></footerBar>
 </template>
