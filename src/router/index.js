@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import newsView from '../views/news.vue'
 import monitorView from '../views/monitor.vue'
 import traceView from '../views/trace.vue'
+import drawView from '../views/drawView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/trace',
       name: 'trace',
       component: traceView
+    },
+    {
+      path: '/draw',
+      name: 'draw',
+      component: drawView
     }
   ]
 })

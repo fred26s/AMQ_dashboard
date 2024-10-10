@@ -35,6 +35,9 @@ const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZ
         <li>
           <RouterLink class="w-full text-center" to="/trace">Trace</RouterLink>
         </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/draw">Draw</RouterLink>
+        </li>
       </template>
 
       <template v-slot:btn1>
