@@ -12,6 +12,8 @@ console.log('organization: ', organization)
 
 const { user } = useUser()
 console.log('user: ', user)
+
+const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZy']
 </script>
 
 <template>
@@ -44,7 +46,7 @@ console.log('user: ', user)
       </template>
     </navBar>
     <SignedIn>
-      <RouterView v-if="user && user.id === 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZy'" />
+      <RouterView v-if="user && uu.includes(user.id)" />
       <div v-else>
         <div class="mockup-code m-2">
           <pre data-prefix="$"><code>npm i StarBoard</code></pre>
