@@ -1,14 +1,14 @@
 <script setup>
-import { onBeforeMount, ref, computed, toValue, watchEffect, unref } from 'vue'
+import { onBeforeMount, ref, computed, toValue, watchEffect } from 'vue'
 import { useFetch } from "../http/api"
 
 
 
 import stats from '../components/stats.vue'
 import statsCard from '../components/statsCard.vue'
-import chartA from '../components/chartA.vue'
+// import chartA from '../components/chartA.vue'
 import chartB from '../components/chartB.vue'
-import articleBar from '../components/articleBar.vue'
+// import articleBar from '../components/articleBar.vue'
 import TradingViewChart from '../components/TradingViewChart.vue';
 import tradeDetail from '../components/tradeDetail.vue';
 
@@ -61,7 +61,12 @@ const tradesList = computed(() => toValue(dataStats)?.trades || []);
 console.log((tradesList))
 console.log('toValue(dataStats)')
 const chartXdata = computed(() => toValue(tradesList).map(e => new Date(e.sell.timestamp).toLocaleString()))
-const chartYdata1 = computed(() => toValue(tradesList).map(e => e.sell.revenue))
+const chartYdata1 = computed(() => toValue(tradesList).map(e => {
+  return {
+    value: e.sell.revenue,
+    type: e.extra.direction
+  }
+}))
 const chartYdata2 = computed(() => toValue(tradesList).map(e => e.sell.price))
 
 // 胜率统计
@@ -112,7 +117,6 @@ const handleClickChart = (trade) => {
       </div>
       <div class="h-96 md:h-auto md:w-1/2">
         <!-- TradingView Chart BEGIN -->
-
         <trading-view-chart :chartId="chartId"></trading-view-chart>
         <!-- TradingView Chart END -->
       </div>
