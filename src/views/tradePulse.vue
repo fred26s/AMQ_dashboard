@@ -70,6 +70,14 @@ const getValueColor = (value, lowerThreshold, upperThreshold) => {
 }
 
 const formatValue = (value) => {
+  // 非数字判断，若是字符串，则转为数字； 若无法转为数字，则返回原value
+  if (typeof value !== 'number') {
+    try {
+      value = Number(value)
+    } catch (error) {
+      return value
+    }
+  }
   if (Math.abs(value) >= 1000000) {
     return (value / 1000000).toFixed(1) + 'M'
   } else if (Math.abs(value) >= 1000) {
