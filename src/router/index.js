@@ -4,6 +4,7 @@ import newsView from '../views/news.vue'
 import monitorView from '../views/monitor.vue'
 import traceView from '../views/trace.vue'
 import drawView from '../views/drawView.vue'
+import tradePulseView from '../views/tradePulse.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,11 @@ const router = createRouter({
       path: '/draw',
       name: 'draw',
       component: drawView
+    },
+    {
+      path: '/tradePulse',
+      name: 'tradePulse',
+      component: tradePulseView
     }
   ]
 })
