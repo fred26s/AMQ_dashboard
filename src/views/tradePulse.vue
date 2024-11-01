@@ -40,6 +40,7 @@ const fetchData = async (params) => {
   const { btcETF } = result.value
   // 缩略数据
   indicators.value[0].value = btcETF[0].total
+  indicators.value[0].date = btcETF[0].date
   // 详情数据
   const chartsData = btcETF.reverse() // 反转图表数据的顺序，由近到远
   indicators.value[0].linesData.xData = chartsData.map((item) => item.date)
@@ -154,10 +155,9 @@ onBeforeMount(async () => {
               {{ formatValue(indicator.value) }}
             </span>
           </div>
-          <!-- <div class="flex justify-between text-xs text-gray-400">
-            <span>{{ formatValue(indicator.min) }}</span>
-            <span>{{ formatValue(indicator.max) }}</span>
-          </div> -->
+          <div class="flex justify-between text-xs text-gray-400">
+            <span>{{ indicator.date }}</span>
+          </div>
         </div>
 
         <!-- Expanded View -->
