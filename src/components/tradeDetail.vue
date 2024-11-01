@@ -85,7 +85,7 @@ function calculateFee(hours, amount) {
   // 计算总手续费
   const fee = feeCount * amount * 0.0001
 
-  return fee
+  return fee.toFixed(1)
 }
 </script>
 

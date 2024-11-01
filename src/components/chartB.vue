@@ -50,6 +50,7 @@ provide(THEME_KEY, 'dark')
 const xdata = computed(() => props.xdata)
 const data1 = computed(() => props.data1)
 const data2 = computed(() => props.data2)
+const dataBG = computed(() => Array(xdata.value.length).fill(10000))
 
 setTimeout(() => {
   console.log(VChart)
@@ -129,7 +130,7 @@ const option = ref({
       symbol: 'none',
     }, 
     {
-      data: [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000],
+      data: dataBG,
       type: 'bar',
       name: 'bg',
       yAxisIndex: 2,
