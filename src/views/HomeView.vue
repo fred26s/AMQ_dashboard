@@ -160,6 +160,16 @@ onBeforeMount(async () => {
 
       <div :class="['card', 'border', 'w-full']">
         <div class="card-body">
+          <div class="flex flex-row w-full lg:flex-row text-xs justify-between flex-wrap">
+            <div class="badge badge-secondary mb-2 font-bold">NO FOMO</div>
+            <div class="badge badge-secondary mb-2 font-bold">绝对自信</div>
+            <div class="badge badge-secondary mb-2 font-bold">买定离手</div>
+            <div class="badge badge-secondary mb-2 font-bold">仓位清心</div>
+            <div class="badge badge-secondary mb-2 font-bold">加仓谨慎</div>
+            <div class="badge badge-secondary mb-2 font-bold">顺应宏观</div>
+            <div class="badge badge-secondary mb-2 font-bold">别猜方向</div>
+          </div>
+          <div  class="divider"></div>
           <div v-if="isBought" class="flex flex-col w-full lg:flex-row text-xs">
             <div class="tooltip" :data-tip="`${openOrders}/10`">
               <span class="mr-2">挂单量</span>
