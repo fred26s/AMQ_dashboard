@@ -51,6 +51,35 @@ const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZ
         <login></login>
       </template>
     </navBar>
+    <!-- 固定头部banner -->
+    <div class="px-2">
+      <div role="alert" class="alert">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="stroke-info h-6 w-6 shrink-0"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div
+          class="flex flex-row w-full text-xs justify-between content-center flex-wrap"
+        >
+          <div class="badge badge-secondary font-bold">NO FOMO</div>
+          <div class="badge badge-secondary font-bold">绝对自信</div>
+          <div class="badge badge-secondary font-bold">买定离手</div>
+          <div class="badge badge-secondary font-bold">仓位清心</div>
+          <div class="badge badge-secondary font-bold">加仓谨慎</div>
+          <div class="badge badge-secondary font-bold">顺应宏观</div>
+          <div class="badge badge-secondary font-bold">别猜方向</div>
+        </div>
+      </div>
+    </div>
     <SignedIn>
       <RouterView v-if="user && uu.includes(user.id)" />
       <div v-else>
