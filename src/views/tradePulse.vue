@@ -34,7 +34,7 @@ const indicators = ref([
     id: 3,
     name: 'BTC-多空比',
     value: 66,
-    thresholds: [0, 0],
+    thresholds: [1, 1],
     linesData: {
       xData: [],
       yData: []
@@ -86,12 +86,13 @@ const fetchData = async (params) => {
 
   // * 未平仓合约
   // 缩略数据
-  indicators.value[1].value = openInterestHist[openInterestHist.length - 1].sumOpenInterestValue
+  indicators.value[1].value = openInterestHist[0].sumOpenInterestValue
   // 详情数据
-  indicators.value[1].linesData.xData = openInterestHist.map((item) =>
+  const openInterestHistChart = openInterestHist.reverse() // 反转图表数据的顺序，由近到远
+  indicators.value[1].linesData.xData = openInterestHistChart.map((item) =>
     new Date(item.timestamp).toLocaleString()
   )
-  indicators.value[1].linesData.yData = openInterestHist.map((item) => item.sumOpenInterestValue)
+  indicators.value[1].linesData.yData = openInterestHistChart.map((item) => item.sumOpenInterestValue)
 
   // * 多空比
   // 缩略数据

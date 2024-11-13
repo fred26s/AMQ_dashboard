@@ -65,13 +65,27 @@ const option = ref({
     {
       name: 'values',
       position: 'left',
-      min: 8000,
+      // min: 8000,
+      // 设置 Y 轴的最小值自适应数据
+      min: function (value) {
+        // 获取 Y 轴数据最小值
+        var min = value.min
+        // 设置 Y 轴最小值，比最小值小 10%
+        return min > 0 ? min * 0.8 : min * 1.2
+      },
       type: 'value'
     },
     {
       name: 'price',
       position: 'right',
-      min: 20000,
+      // min: 20000,
+      // 设置 Y 轴的最小值自适应数据
+      min: function (value) {
+        // 获取 Y 轴数据最小值
+        var min = value.min
+        // 设置 Y 轴最小值，比最小值小 10%
+        return min > 0 ? min * 0.8 : min * 1.2
+      },
       type: 'value'
     },
     // 为了快捷点击，而使用的透明背景柱状图

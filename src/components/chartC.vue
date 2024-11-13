@@ -65,6 +65,13 @@ const option = ref({
       type: 'value',
       nameTextStyle: {
         color: 'transparent'
+      },
+      // 设置 Y 轴的最小值自适应数据
+      min: function (value) {
+        // 获取 Y 轴数据最小值
+        var min = value.min
+        // 设置 Y 轴最小值，比最小值小 10%
+        return min > 0 ? min * 0.8 : min * 1.2
       }
     }
   ],
