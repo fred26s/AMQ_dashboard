@@ -4,7 +4,9 @@ import { onBeforeMount, ref, computed, toValue, watchEffect, unref, watch } from
 import toggle from '../components/toggle.vue'
 import textBar from '../components/text.vue'
 import toastBar from '../components/toast.vue'
+import loadingButton from '../components/loadingButton.vue'
 
+const isLoading = ref(false)
 let dataInfo = ref({})
 
 // 交易模块
@@ -48,61 +50,69 @@ let openOrders = ref(0)
 let isBought = ref(false)
 
 const fetchData = async (params) => {
-  // 默认使用 realtime，查看线上实时策略状态
-  const data = {
-    ...params
+  try {
+    isLoading.value = true
+
+    // 默认使用 realtime，查看线上实时策略状态
+    const data = {
+      ...params
+    }
+    const { result, err } = await useFetch('/shadow/moon', {
+      method: 'post',
+      data
+    })
+    dataInfo.value = result.value
+
+    if (!err) {
+      toast.value.open({ type: 'alert-success', msg: 'Refresh' })
+    } else {
+      toast.value.open({ type: 'alert-error', msg: err })
+    }
+
+    const {
+      enableTips: enableTipsTmp,
+      tipsPrice: tipsPriceTmp,
+      openOrders: openOrdersTmp,
+      ratio,
+      enableTrade,
+      enableSell,
+      enableBuy,
+      stopProfit,
+      stopLoss,
+      priceOpen,
+      triggerPrice,
+      priceCancel,
+      enablePriceCancel,
+      enableFishnetBuy,
+      bought
+    } = result.value
+
+    console.log(stopProfit)
+
+    triggerTrade.value = enableTrade
+    triggerBuy.value = enableBuy
+    triggerSell.value = enableSell
+
+    priceStopProfit.value = stopProfit
+    priceStopLoss.value = stopLoss
+    priceOpend.value = priceOpen
+    ratioOpen.value = ratio
+    priceTrigger.value = triggerPrice
+    priceCancels.value = priceCancel
+    enablePriceCancels.value = enablePriceCancel
+    enableFishNet.value = enableFishnetBuy
+    boughtStatus.value = bought ? '已开仓' : '未开仓'
+    isBought.value = bought
+
+    enableTips.value = enableTipsTmp
+    tipsPrice.value = tipsPriceTmp
+
+    openOrders.value = openOrdersTmp.length || 0
+
+    isLoading.value = false
+  } catch (error) {
+    isLoading.value = false
   }
-  const { result, err } = await useFetch('/shadow/moon', {
-    method: 'post',
-    data
-  })
-  dataInfo.value = result.value
-
-  if (!err) {
-    toast.value.open({ type: 'alert-success', msg: 'Refresh' })
-  } else {
-    toast.value.open({ type: 'alert-error', msg: err })
-  }
-
-  const {
-    enableTips: enableTipsTmp,
-    tipsPrice: tipsPriceTmp,
-    openOrders: openOrdersTmp,
-    ratio,
-    enableTrade,
-    enableSell,
-    enableBuy,
-    stopProfit,
-    stopLoss,
-    priceOpen,
-    triggerPrice,
-    priceCancel,
-    enablePriceCancel,
-    enableFishnetBuy,
-    bought
-  } = result.value
-
-  console.log(stopProfit)
-
-  triggerTrade.value = enableTrade
-  triggerBuy.value = enableBuy
-  triggerSell.value = enableSell
-
-  priceStopProfit.value = stopProfit
-  priceStopLoss.value = stopLoss
-  priceOpend.value = priceOpen
-  ratioOpen.value = ratio
-  priceTrigger.value = triggerPrice
-  priceCancels.value = priceCancel
-  enablePriceCancels.value = enablePriceCancel
-  enableFishNet.value = enableFishnetBuy
-  boughtStatus.value = bought ? '已开仓' : '未开仓'
-  isBought.value = bought
-
-  enableTips.value = enableTipsTmp
-  tipsPrice.value = tipsPriceTmp
-
-  openOrders.value = openOrdersTmp.length || 0
 }
 
 const setData = async () => {
@@ -150,7 +160,10 @@ onBeforeMount(async () => {
         size="toggle-lg"
         v-model="triggerTrade"
       ></toggle>
-      <button class="btn btn-circle btn-accent mr-5" @click="fetchData">刷新</button>
+
+      <loadingButton class="mr-5" v-model:loading="isLoading">
+        <button class="btn btn-circle btn-accent" @click="fetchData">刷新</button>
+      </loadingButton>
     </div>
 
     <div class="indicator w-full mt-5">

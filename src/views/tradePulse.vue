@@ -2,8 +2,9 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { useFetch } from '../http/api'
 import chartC from '../components/chartC.vue'
-
+import loadingButton from '../components/loadingButton.vue'
 const expandedCards = ref([])
+const isLoading = ref(false)
 
 const indicators = ref([
   {
@@ -65,55 +66,64 @@ const indicators = ref([
 ])
 
 const fetchData = async (params) => {
-  // 默认使用 realtime，查看线上实时策略状态
-  const data = {
-    ...params
+  try {
+    isLoading.value = true
+
+    // 默认使用 realtime，查看线上实时策略状态
+    const data = {
+      ...params
+    }
+    const { result, err } = await useFetch('/pulse/moon', {
+      method: 'get',
+      data
+    })
+    let { btcETF, openInterestHist, globalLongShortAccountRatio, fundingRate } = result.value
+
+    // * BTC-ETF
+    // 缩略数据
+    indicators.value[0].value = btcETF[0].total
+    indicators.value[0].date = btcETF[0].date
+    // 详情数据
+    const chartsData = btcETF.reverse() // 反转图表数据的顺序，由近到远
+    indicators.value[0].linesData.xData = chartsData.map((item) => item.date)
+    indicators.value[0].linesData.yData = chartsData.map((item) => item.total)
+
+    // * 未平仓合约
+    // 缩略数据
+    indicators.value[1].value = openInterestHist[0].sumOpenInterestValue
+    // 详情数据
+    const openInterestHistChart = openInterestHist.reverse() // 反转图表数据的顺序，由近到远
+    indicators.value[1].linesData.xData = openInterestHistChart.map((item) =>
+      new Date(item.timestamp).toLocaleString()
+    )
+    indicators.value[1].linesData.yData = openInterestHistChart.map(
+      (item) => item.sumOpenInterestValue
+    )
+
+    // * 多空比
+    // 缩略数据
+    indicators.value[2].value =
+      globalLongShortAccountRatio[globalLongShortAccountRatio.length - 1].longShortRatio
+    // 详情数据
+    indicators.value[2].linesData.xData = globalLongShortAccountRatio.map((item) =>
+      new Date(item.timestamp).toLocaleString()
+    )
+    indicators.value[2].linesData.yData = globalLongShortAccountRatio.map(
+      (item) => item.longShortRatio
+    )
+
+    // * 资金费率
+    // 缩略数据
+    indicators.value[3].value = `${fundingRate[fundingRate.length - 1].fundingRate * 100}`
+    // 详情数据
+    indicators.value[3].linesData.xData = fundingRate.map((item) =>
+      new Date(item.fundingTime).toLocaleString()
+    )
+    indicators.value[3].linesData.yData = fundingRate.map((item) => item.fundingRate)
+    isLoading.value = false
+  } catch (error) {
+    isLoading.value = false
   }
-  const { result, err } = await useFetch('/pulse/moon', {
-    method: 'get',
-    data
-  })
-  let { btcETF, openInterestHist, globalLongShortAccountRatio, fundingRate } = result.value
-
-  // * BTC-ETF
-  // 缩略数据
-  indicators.value[0].value = btcETF[0].total
-  indicators.value[0].date = btcETF[0].date
-  // 详情数据
-  const chartsData = btcETF.reverse() // 反转图表数据的顺序，由近到远
-  indicators.value[0].linesData.xData = chartsData.map((item) => item.date)
-  indicators.value[0].linesData.yData = chartsData.map((item) => item.total)
-
-  // * 未平仓合约
-  // 缩略数据
-  indicators.value[1].value = openInterestHist[0].sumOpenInterestValue
-  // 详情数据
-  const openInterestHistChart = openInterestHist.reverse() // 反转图表数据的顺序，由近到远
-  indicators.value[1].linesData.xData = openInterestHistChart.map((item) =>
-    new Date(item.timestamp).toLocaleString()
-  )
-  indicators.value[1].linesData.yData = openInterestHistChart.map((item) => item.sumOpenInterestValue)
-
-  // * 多空比
-  // 缩略数据
-  indicators.value[2].value =
-    globalLongShortAccountRatio[globalLongShortAccountRatio.length - 1].longShortRatio
-  // 详情数据
-  indicators.value[2].linesData.xData = globalLongShortAccountRatio.map((item) =>
-    new Date(item.timestamp).toLocaleString()
-  )
-  indicators.value[2].linesData.yData = globalLongShortAccountRatio.map(
-    (item) => item.longShortRatio
-  )
-
-  // * 资金费率
-  // 缩略数据
-  indicators.value[3].value = `${fundingRate[fundingRate.length - 1].fundingRate * 100}`
-  // 详情数据
-  indicators.value[3].linesData.xData = fundingRate.map((item) =>
-    new Date(item.fundingTime).toLocaleString()
-  )
-  indicators.value[3].linesData.yData = fundingRate.map((item) => item.fundingRate)
 }
 
 const activeSignals = computed(() => {
@@ -176,9 +186,9 @@ onBeforeMount(async () => {
   <div class="min-h-screen bg-gray-900 p-4 text-gray-100">
     <h1 class="text-2xl font-bold mb-5 text-center text-gray-100 relative">
       Trading Pulse🥰
-      <button class="btn btn-circle btn-accent mr-5 absolute right-0" @click="fetchData">
-        刷新
-      </button>
+      <loadingButton class="absolute right-0" v-model:loading="isLoading">
+        <button class="btn btn-circle btn-accent" @click="fetchData">刷新</button>
+      </loadingButton>
     </h1>
 
     <!-- Trading Signals Panel -->
