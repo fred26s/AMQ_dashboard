@@ -15,7 +15,7 @@ const props = defineProps({
 })
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { TitleComponent, TooltipComponent, DataZoomComponent } from 'echarts/components'
+import { TitleComponent, TooltipComponent } from 'echarts/components'
 // line
 import { LineChart, BarChart } from 'echarts/charts'
 import { GridComponent, LegendComponent } from 'echarts/components'
@@ -25,18 +25,7 @@ import { ref, provide, computed, onMounted } from 'vue'
 
 const chartRef = ref(null)
 
-onMounted(() => {
-  // if (chartRef.value) {
-  //   console.log(chartRef.value)
-  //   console.log('chartRef.value')
-  //   chartRef.value.chart._api.on('click', function (params) {
-  //     // 在这里处理点击事件
-  //     console.log('Data:', params.data)
-  //     console.log('params:', params)
-  //     params.stopPropagation();
-  //   })
-  // }
-})
+onMounted(() => {})
 
 use([
   LineChart,
@@ -45,8 +34,7 @@ use([
   GridComponent,
   CanvasRenderer,
   TitleComponent,
-  TooltipComponent,
-  DataZoomComponent
+  TooltipComponent
 ])
 
 provide(THEME_KEY, 'dark')
@@ -56,21 +44,30 @@ const data1 = computed(() => props.data1)
 
 const option = ref({
   grid: {
-    containLabel: true,
-    left: 20,
-    right: 20,
-    bottom: 30,
-    top: 50
+    containLabel: false, // 不包含标签，缩略图不需要
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0
   },
   xAxis: {
+    show: false,
     type: 'category',
+    boundaryGap: false, // 移除坐标轴两端空白
     data: xdata
   },
   yAxis: [
     {
+      show: false,
       name: 'values',
       position: 'left',
+      boundaryGap: false, // 移除坐标轴两端空白
       type: 'value',
+      axisLine: {
+        lineStyle: {
+          width: 0
+        }
+      },
       nameTextStyle: {
         color: 'transparent'
       },
@@ -78,36 +75,17 @@ const option = ref({
       min: function (value) {
         // 获取 Y 轴数据最小值
         var min = value.min
-        // 设置 Y 轴最小值，比最小值小 10%
-        return min > 0 ? min * 0.8 : min * 1.2
+        // 设置 Y 轴最小值，比最小值小 10
+        return min > 0 ? min * 0.99 : min * 1.2
       }
     }
   ],
   legend: {
     show: false
-    // data: ['values', 'price']
   },
   tooltip: {
     trigger: 'axis'
   },
-  dataZoom: [
-    {
-      type: 'slider',
-      show: true,
-      realtime: true,
-      handleSize: '100%',
-      start: 0,
-      end: 100,
-      xAxisIndex: 0
-    }
-    // {
-    //   type: 'inside',
-    //   realtime: true,
-    //   start: 30,
-    //   end: 70,
-    //   xAxisIndex: [0, 1]
-    // }
-  ],
   series: [
     {
       data: data1,
@@ -122,7 +100,7 @@ const option = ref({
       },
       lineStyle: {
         color: '#005fffd6',
-        width: 3
+        width: 1
       },
       itemStyle: {
         color: (params) => {

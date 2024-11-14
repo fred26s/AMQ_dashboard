@@ -2,6 +2,7 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { useFetch } from '../http/api'
 import chartC from '../components/chartC.vue'
+import chartD from '../components/chartD.vue'
 import loadingButton from '../components/loadingButton.vue'
 const expandedCards = ref([])
 const isLoading = ref(false)
@@ -235,6 +236,12 @@ onBeforeMount(async () => {
             >
               {{ formatValue(indicator.value) }}
             </span>
+            <div class="w-1/2 h-8">
+              <chartD
+                :xdata="indicator.linesData.xData.slice(-50)"
+                :data1="indicator.linesData.yData.slice(-50)"
+              ></chartD>
+            </div>
           </div>
           <div class="flex justify-between text-xs text-gray-400">
             <span>{{ indicator.date }}</span>
