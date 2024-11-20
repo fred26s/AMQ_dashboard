@@ -4,8 +4,10 @@ import { useFetch } from '../http/api'
 import chartC from '../components/chartC.vue'
 import chartD from '../components/chartD.vue'
 import loadingButton from '../components/loadingButton.vue'
+import calendarBar from '../components/calendarBar.vue'
 const expandedCards = ref([])
 const isLoading = ref(false)
+const calendarUs = ref([])
 
 const indicators = ref([
   {
@@ -82,7 +84,10 @@ const fetchData = async (params) => {
       method: 'get',
       data
     })
-    let { btcETF, openInterestHist, globalLongShortAccountRatio, fundingRate } = result.value
+    let { btcETF, openInterestHist, globalLongShortAccountRatio, fundingRate,calendarUS  } = result.value
+    // * calendarUS
+    calendarUs.value = calendarUS;
+
 
     // * BTC-ETF
     // 缩略数据
@@ -124,7 +129,9 @@ const fetchData = async (params) => {
     // * 资金费率
     // 缩略数据
     indicators.value[3].value = `${fundingRate[fundingRate.length - 1].fundingRate * 100}`
-    indicators.value[3].date = new Date(fundingRate[fundingRate.length - 1].fundingTime).toLocaleString()
+    indicators.value[3].date = new Date(
+      fundingRate[fundingRate.length - 1].fundingTime
+    ).toLocaleString()
     // 详情数据
     indicators.value[3].linesData.xData = fundingRate.map((item) =>
       new Date(item.fundingTime).toLocaleString()
@@ -218,6 +225,8 @@ onBeforeMount(async () => {
       </div>
       <p v-else class="text-gray-400 text-sm">No active signals</p>
     </div>
+    <!--calendar -->
+    <calendarBar :events="calendarUs"/>
 
     <!-- Indicator Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
