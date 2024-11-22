@@ -9,7 +9,7 @@ const expandedCards = ref([])
 const isLoading = ref(false)
 const calendarUs = ref([])
 
-const indicators = ref([
+const indicatorsConfig = ref([
   {
     id: 1,
     name: 'BTC-ETF',
@@ -21,7 +21,40 @@ const indicators = ref([
     },
     date: '',
     description: '比特币现货ETF流量',
-    additionalData: {}
+    additionalData: {},
+
+    valueGetter: (data) => data.btcETF[0].total,
+    dateGetter: (data) => new Date(data.btcETF[0].date).toLocaleString(),
+    linesDataGetter: (data) => {
+      const chartsData = data.btcETF.reverse()
+      return {
+        xData: chartsData.map((item) => item.date) || [],
+        yData: chartsData.map((item) => item.total) || []
+      }
+    }
+  },
+  {
+    id: 5,
+    name: 'S&P 500',
+    value: 65,
+    thresholds: [0, 0],
+    linesData: {
+      xData: [],
+      yData: []
+    },
+    date: '',
+    description: '美股标准普尔500指数',
+    additionalData: {},
+
+    valueGetter: (data) => data.sp500[0].c,
+    dateGetter: (data) => new Date(data.sp500[0].timestamp).toLocaleString(),
+    linesDataGetter: (data) => {
+      const chartsData = data.sp500.reverse()
+      return {
+        xData: chartsData.map((item) => item.timestamp) || [],
+        yData: chartsData.map((item) => item.c) || []
+      }
+    }
   },
   {
     id: 2,
@@ -34,7 +67,16 @@ const indicators = ref([
     },
     date: '',
     description: '比特币未平仓合约量',
-    additionalData: {}
+    additionalData: {},
+    valueGetter: (data) => data.openInterestHist[0].sumOpenInterestValue,
+    dateGetter: (data) => new Date(data.openInterestHist[0].timestamp).toLocaleString(),
+    linesDataGetter: (data) => {
+      const openInterestHistChart = data.openInterestHist.reverse()
+      return {
+        xData: openInterestHistChart.map((item) => new Date(item.timestamp).toLocaleString()) || [],
+        yData: openInterestHistChart.map((item) => item.sumOpenInterestValue) || []
+      }
+    }
   },
   {
     id: 3,
@@ -47,7 +89,22 @@ const indicators = ref([
     },
     date: '',
     description: '比特币多空比',
-    additionalData: {}
+    additionalData: {},
+    valueGetter: (data) =>
+      data.globalLongShortAccountRatio[data.globalLongShortAccountRatio.length - 1].longShortRatio,
+    dateGetter: (data) =>
+      new Date(
+        data.globalLongShortAccountRatio[data.globalLongShortAccountRatio.length - 1].timestamp
+      ).toLocaleString(),
+    linesDataGetter: (data) => {
+      return {
+        xData:
+          data.globalLongShortAccountRatio.map((item) =>
+            new Date(item.timestamp).toLocaleString()
+          ) || [],
+        yData: data.globalLongShortAccountRatio.map((item) => item.longShortRatio) || []
+      }
+    }
   },
   {
     id: 4,
@@ -60,7 +117,16 @@ const indicators = ref([
     },
     date: '',
     description: '比特币资金费率',
-    additionalData: {}
+    additionalData: {},
+    valueGetter: (data) => `${data.fundingRate[data.fundingRate.length - 1].fundingRate * 100}`,
+    dateGetter: (data) =>
+      new Date(data.fundingRate[data.fundingRate.length - 1].fundingTime).toLocaleString(),
+    linesDataGetter: (data) => {
+      return {
+        xData: data.fundingRate.map((item) => new Date(item.fundingTime).toLocaleString()) || [],
+        yData: data.fundingRate.map((item) => item.fundingRate) || []
+      }
+    }
   }
   // {
   //   id: 9,
@@ -72,86 +138,51 @@ const indicators = ref([
   // }
 ])
 
+// 历史数据模块-遍历赋值逻辑
+const updateIndicator = (indicator, data) => {
+  indicator.value = indicator.valueGetter(data)
+  indicator.date = indicator.dateGetter(data)
+  const linesData = indicator.linesDataGetter(data)
+  indicator.linesData.xData = linesData.xData
+  indicator.linesData.yData = linesData.yData
+}
+
 const fetchData = async (params) => {
   try {
     isLoading.value = true
 
-    // 默认使用 realtime，查看线上实时策略状态
-    const data = {
-      ...params
-    }
+    const data = { ...params }
     const { result, err } = await useFetch('/pulse/moon', {
       method: 'get',
       data
     })
-    let { btcETF, openInterestHist, globalLongShortAccountRatio, fundingRate,calendarUS  } = result.value
-    // * calendarUS
-    calendarUs.value = calendarUS;
 
+    if (err) throw new Error(err)
 
-    // * BTC-ETF
-    // 缩略数据
-    indicators.value[0].value = btcETF[0].total
-    indicators.value[0].date = new Date(btcETF[0].date).toLocaleString()
-    // 详情数据
-    const chartsData = btcETF.reverse() // 反转图表数据的顺序，由近到远
-    indicators.value[0].linesData.xData = chartsData.map((item) => item.date)
-    indicators.value[0].linesData.yData = chartsData.map((item) => item.total)
+    const responseData = result.value
+    // 遍历执行所有数据赋值
+    indicatorsConfig.value.forEach((indicator) => {
+      updateIndicator(indicator, responseData)
+    })
 
-    // * 未平仓合约
-    // 缩略数据
-    indicators.value[1].value = openInterestHist[0].sumOpenInterestValue
-    indicators.value[1].date = new Date(openInterestHist[0].timestamp).toLocaleString()
-    // 详情数据
-    const openInterestHistChart = openInterestHist.reverse() // 反转图表数据的顺序，由近到远
-    indicators.value[1].linesData.xData = openInterestHistChart.map((item) =>
-      new Date(item.timestamp).toLocaleString()
-    )
-    indicators.value[1].linesData.yData = openInterestHistChart.map(
-      (item) => item.sumOpenInterestValue
-    )
+    // 经济日历（独立模块，单独赋值）
+    calendarUs.value = responseData.calendarUS
 
-    // * 多空比
-    // 缩略数据
-    indicators.value[2].value =
-      globalLongShortAccountRatio[globalLongShortAccountRatio.length - 1].longShortRatio
-    indicators.value[2].date = new Date(
-      globalLongShortAccountRatio[globalLongShortAccountRatio.length - 1].timestamp
-    ).toLocaleString()
-    // 详情数据
-    indicators.value[2].linesData.xData = globalLongShortAccountRatio.map((item) =>
-      new Date(item.timestamp).toLocaleString()
-    )
-    indicators.value[2].linesData.yData = globalLongShortAccountRatio.map(
-      (item) => item.longShortRatio
-    )
-
-    // * 资金费率
-    // 缩略数据
-    indicators.value[3].value = `${fundingRate[fundingRate.length - 1].fundingRate * 100}`
-    indicators.value[3].date = new Date(
-      fundingRate[fundingRate.length - 1].fundingTime
-    ).toLocaleString()
-    // 详情数据
-    indicators.value[3].linesData.xData = fundingRate.map((item) =>
-      new Date(item.fundingTime).toLocaleString()
-    )
-    indicators.value[3].linesData.yData = fundingRate.map((item) => item.fundingRate)
     isLoading.value = false
   } catch (error) {
+    console.error(error)
     isLoading.value = false
   }
 }
-
 const activeSignals = computed(() => {
-  return indicators.value.filter(
+  return indicatorsConfig.value.filter(
     (indicator) =>
       indicator.value >= indicator.thresholds[1] || indicator.value <= indicator.thresholds[0]
   )
 })
 
 const sortedIndicators = computed(() => {
-  return [...indicators.value].sort((a, b) => {
+  return [...indicatorsConfig.value].sort((a, b) => {
     const aExpanded = expandedCards.value.includes(a.id)
     const bExpanded = expandedCards.value.includes(b.id)
     if (aExpanded && !bExpanded) return -1
@@ -209,7 +240,8 @@ onBeforeMount(async () => {
     </h1>
 
     <!-- Trading Signals Panel -->
-    <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <!-- 暂时隐藏，功能待开发 -->
+    <!-- <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
       <h2 class="text-xl font-semibold mb-2">Trading Signals</h2>
       <div
         v-if="activeSignals.length > 0"
@@ -224,9 +256,9 @@ onBeforeMount(async () => {
         </div>
       </div>
       <p v-else class="text-gray-400 text-sm">No active signals</p>
-    </div>
+    </div> -->
     <!--calendar -->
-    <calendarBar :events="calendarUs"/>
+    <calendarBar :events="calendarUs" />
 
     <!-- Indicator Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">

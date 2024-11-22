@@ -44,7 +44,7 @@ const toggleShowAll = () => {
 </script>
 
 <template>
-  <div class="bg-gray-900 mb-4 rounded-lg shadow-xl">
+  <div class="bg-gray-900 mb-4 mt-8 rounded-lg shadow-xl">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold text-gray-100">Market Events</h2>
       <button
@@ -67,7 +67,7 @@ const toggleShowAll = () => {
     >
       <div
         v-for="item in displayedEvents"
-        :key="item.id"
+        :key="item.event"
         :class="[
           'p-2 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105',
           item.important ? 'bg-yellow-900 hover:bg-yellow-800' : 'bg-gray-800 hover:bg-gray-700'
