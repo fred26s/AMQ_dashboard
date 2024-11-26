@@ -127,6 +127,30 @@ const indicatorsConfig = ref([
         yData: data.fundingRate.map((item) => item.fundingRate) || []
       }
     }
+  },
+  {
+    id: 6,
+    name: 'BTC-爆仓线',
+    value: 66,
+    thresholds: [0, 0],
+    base64: true,
+    source: '',
+    linesData: {
+      xData: [],
+      yData: []
+    },
+    date: '',
+    description: '永续合约爆仓线',
+    additionalData: {},
+    valueGetter: () => ``,
+    sourceGetter: (data) => `data:image/jpeg;base64,${data.lhMap[0].content}`,
+    dateGetter: (data) => new Date(data.lhMap[0].timestamp).toLocaleString(),
+    linesDataGetter: () => {
+      return {
+        xData: [],
+        yData: []
+      }
+    }
   }
   // {
   //   id: 9,
@@ -140,6 +164,9 @@ const indicatorsConfig = ref([
 
 // 历史数据模块-遍历赋值逻辑
 const updateIndicator = (indicator, data) => {
+  if (indicator.sourceGetter) {
+    indicator.source = indicator.sourceGetter(data)
+  }
   indicator.value = indicator.valueGetter(data)
   indicator.date = indicator.dateGetter(data)
   const linesData = indicator.linesDataGetter(data)
@@ -309,12 +336,20 @@ onBeforeMount(async () => {
             >
               {{ formatValue(indicator.value) }}
             </span>
+            
+          <div class="flex justify-between text-xs text-gray-400">
+            <span>{{ indicator.date }}</span>
+          </div>
           </div>
           <!-- 描述 -->
           <p class="text-sm text-gray-300 mb-2">{{ indicator.description }}</p>
           <!-- 折线图表 -->
-          <div v-if="indicator.linesData" class="mb-2 h-64">
+          <div v-if="indicator.linesData && !indicator.base64" class="mb-2 h-64">
             <chartC :xdata="indicator.linesData.xData" :data1="indicator.linesData.yData"></chartC>
+          </div>
+          <!-- 图片展示 -->
+          <div v-if="indicator.base64" class="mb-2 h-64">
+            <img :src="indicator.source" class="w-full h-full"/>
           </div>
 
           <div v-if="indicator.additionalData" class="space-y-1 text-sm">
