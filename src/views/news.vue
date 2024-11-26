@@ -1,14 +1,27 @@
 <script setup>
 import { useFetch } from '../http/api'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import toastBar from '../components/toast.vue'
 
-let dataInfo = ref({})
+const props = defineProps({
+  refreshNews: {
+    type: Boolean,
+    default: true
+  },
+})
+const canRefreshNews = computed(() => props.refreshNews)
+
+let dataInfo = ref({
+  links: [],
+  status: [],
+  bull: [],
+  bear: []
+})
 
 // 是否显示
 let visibleBull = ref(false)
 // 平仓信号
-let visibleShit = ref(true)
+let visibleShit = ref(false)
 
 let loading = ref(false)
 
@@ -100,7 +113,7 @@ onBeforeMount(async () => {
           }}
         </div>
         <button
-          v-if="!loading"
+          v-if="!loading && canRefreshNews"
           key="btn"
           class="btn btn-circle btn-secondary"
           @click="fetchDataRefresh"

@@ -5,6 +5,7 @@ import chartC from '../components/chartC.vue'
 import chartD from '../components/chartD.vue'
 import loadingButton from '../components/loadingButton.vue'
 import calendarBar from '../components/calendarBar.vue'
+import newsBar from './news.vue'
 const expandedCards = ref([])
 const isLoading = ref(false)
 const calendarUs = ref([])
@@ -285,10 +286,15 @@ onBeforeMount(async () => {
       <p v-else class="text-gray-400 text-sm">No active signals</p>
     </div> -->
     <!--calendar -->
-    <calendarBar :events="calendarUs" />
+    <div class="flex lg:flex-row flex-col gap-4">
+      <calendarBar :events="calendarUs"  class="lg:w-1/2 w-full"/>
+      <div class="lg:w-1/2 w-full">
+        <newsBar :refreshNews="false"></newsBar>
+      </div>
+    </div>
 
     <!-- Indicator Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
       <div
         v-for="indicator in sortedIndicators"
         :key="indicator.id"
