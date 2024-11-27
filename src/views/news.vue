@@ -54,7 +54,7 @@ const fetchDataRefresh = async (params) => {
       ...params
     }
     const { result, err, code, message } = await useFetch('/news/sun', {
-      method: 'post',
+      method: 'get',
       data
     })
     console.log(code, result, message)
