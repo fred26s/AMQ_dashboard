@@ -9,6 +9,7 @@ import newsBar from './news.vue'
 const expandedCards = ref([])
 const isLoading = ref(false)
 const calendarUs = ref([])
+const holidays = ref([])
 
 const indicatorsConfig = ref([
   {
@@ -195,6 +196,8 @@ const fetchData = async (params) => {
 
     // 经济日历（独立模块，单独赋值）
     calendarUs.value = responseData.calendarUS
+    // 节假日
+    holidays.value = responseData.holidays
 
     isLoading.value = false
   } catch (error) {
@@ -287,7 +290,7 @@ onBeforeMount(async () => {
     </div> -->
     <!--calendar -->
     <div class="flex lg:flex-row flex-col gap-4">
-      <calendarBar :events="calendarUs"  class="lg:w-1/2 w-full"/>
+      <calendarBar :events="calendarUs" :holidays="holidays"  class="lg:w-1/2 w-full"/>
       <div class="lg:w-1/2 w-full">
         <newsBar :refreshNews="false"></newsBar>
       </div>
