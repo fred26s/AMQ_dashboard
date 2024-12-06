@@ -10,6 +10,7 @@ const expandedCards = ref([])
 const isLoading = ref(false)
 const calendarUs = ref([])
 const holidays = ref([])
+const details = ref([])
 
 const indicatorsConfig = ref([
   {
@@ -198,6 +199,8 @@ const fetchData = async (params) => {
     calendarUs.value = responseData.calendarUS
     // 节假日
     holidays.value = responseData.holidays
+    // 日历详情
+    details.value = responseData.tradingMonthly
 
     isLoading.value = false
   } catch (error) {
@@ -290,14 +293,21 @@ onBeforeMount(async () => {
     </div> -->
     <!--calendar -->
     <div class="flex lg:flex-row flex-col gap-4">
-      <calendarBar :events="calendarUs" :holidays="holidays"  class="lg:w-1/2 w-full"/>
+      <calendarBar
+        :events="calendarUs"
+        :holidays="holidays"
+        :details="details"
+        class="lg:w-1/2 w-full"
+      />
       <div class="lg:w-1/2 w-full">
         <newsBar :refreshNews="false"></newsBar>
       </div>
     </div>
 
     <!-- Indicator Grid -->
-    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div
+      class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"
+    >
       <div
         v-for="indicator in sortedIndicators"
         :key="indicator.id"
@@ -345,10 +355,10 @@ onBeforeMount(async () => {
             >
               {{ formatValue(indicator.value) }}
             </span>
-            
-          <div class="flex justify-between text-xs text-gray-400">
-            <span>{{ indicator.date }}</span>
-          </div>
+
+            <div class="flex justify-between text-xs text-gray-400">
+              <span>{{ indicator.date }}</span>
+            </div>
           </div>
           <!-- 描述 -->
           <p class="text-sm text-gray-300 mb-2">{{ indicator.description }}</p>
@@ -358,7 +368,7 @@ onBeforeMount(async () => {
           </div>
           <!-- 图片展示 -->
           <div v-if="indicator.base64" class="mb-2 h-64">
-            <img :src="indicator.source" class="w-full h-full"/>
+            <img :src="indicator.source" class="w-full h-full" />
           </div>
 
           <div v-if="indicator.additionalData" class="space-y-1 text-sm">

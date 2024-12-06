@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
+import chartD from './chartD.vue'
+
 const props = defineProps({
   // 事件列表
   events: {
@@ -8,6 +10,11 @@ const props = defineProps({
   },
   // 节假日
   holidays: {
+    type: Array,
+    default: () => []
+  },
+  // 日历详情
+  details: {
     type: Array,
     default: () => []
   }
@@ -40,7 +47,12 @@ const filterHolidays = computed(() => {
   return removeCurrentYearEvents(slicedHolidays)
 })
 
-const keywordList = ['利率', '非农', '失业', '通货膨胀', '经理人指数', '个人消费支出']
+const dailyDetails = computed(() => {
+  const details = props.details
+  return details
+})
+
+const keywordList = ['利率', '核心通胀率（年）', '非农', '失业', '经理人指数', '个人消费支出']
 const events = computed(() => {
   // 浅拷贝操作展示，不改变源数据
   const result = props.events
@@ -49,7 +61,20 @@ const events = computed(() => {
     .map((e) => {
       return {
         ...e,
-        important: keywordList.some((item) => e.event.includes(item))
+        important: keywordList.some((item) => e.event.includes(item)),
+        idx: e.event.includes('利率')
+          ? 1
+          : e.event.includes('核心通胀率（年）')
+          ? 2
+          : e.event.includes('非农')
+          ? 3
+          : e.event.includes('失业')
+          ? 4
+          : e.event.includes('经理人指数')
+          ? 5
+          : e.event.includes('个人消费支出')
+          ? 6
+          : 0
       }
     })
     // 结合节假日数据
@@ -127,15 +152,38 @@ const toggleShowAll = () => {
             : 'bg-gray-800 hover:bg-gray-700'
         ]"
       >
-        <div class="flex flex-col h-full justify-between">
-          <span
-            :class="['font-medium text-sm', item.important ? 'text-yellow-200' : 'text-gray-200']"
+        <div class="dropdown dropdown-hover dropdown-top">
+          <div tabindex="0" role="button" class="">
+            <div class="flex flex-col h-full justify-between">
+              <span
+                :class="[
+                  'font-medium text-sm',
+                  item.important ? 'text-yellow-200' : 'text-gray-200'
+                ]"
+              >
+                {{ item.event }}
+              </span>
+              <span :class="['text-xs mt-1', item.important ? 'text-yellow-300' : 'text-gray-400']">
+                {{ formatDate(item.timestamp) }}
+              </span>
+            </div>
+          </div>
+          <ul
+            v-if="item.idx"
+            tabindex="0"
+            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
           >
-            {{ item.event }}
-          </span>
-          <span :class="['text-xs mt-1', item.important ? 'text-yellow-300' : 'text-gray-400']">
-            {{ formatDate(item.timestamp) }}
-          </span>
+            <li>
+              {{ dailyDetails[item.idx - 1] && dailyDetails[item.idx - 1].description }}
+            </li>
+            <div class="w-full h-10 mb-2">
+              <chartD
+                :key="item.event"
+                :xdata="dailyDetails[item.idx - 1] && dailyDetails[item.idx - 1].result.map(e => e[3])"
+                :data1="dailyDetails[item.idx - 1] && dailyDetails[item.idx - 1].result.map(e => e[0])"
+              ></chartD>
+            </div>
+          </ul>
         </div>
       </div>
     </transition-group>
