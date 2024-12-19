@@ -6,6 +6,11 @@ import chartD from '../components/chartD.vue'
 import loadingButton from '../components/loadingButton.vue'
 import calendarBar from '../components/calendarBar.vue'
 import newsBar from './news.vue'
+import linesData from '../components/lines.json'
+import mockData1 from '../components/mock/000000001.json'
+import mockData2 from '../components/mock/000000002.json'
+import mockData3 from '../components/mock/000000003.json'
+
 const expandedCards = ref([])
 const isLoading = ref(false)
 const calendarUs = ref([])
@@ -154,7 +159,71 @@ const indicatorsConfig = ref([
         yData: []
       }
     }
+  },
+  // 期权持仓量(最大)
+  {
+    id: 7,
+    name: '期权持仓量(最大)',
+    value: 66,
+    thresholds: [0, 0],
+    linesData: {
+      xData: [],
+      yData: []
+    },
+    date: '',
+    description: '期权最大持仓量的日期，市场更容易产生波动',
+    additionalData: {},
+    // 计算最大持仓量的索引，在去keylist中找对应的日期
+    valueGetter: (data) =>
+      `📅${
+        mockData1.result.data.keyList[
+          mockData1.result.data.notionalOiList.indexOf(
+            Math.max(...mockData1.result.data.notionalOiList)
+          )
+        ]
+      }`,
+    dateGetter: () => '',
+    linesDataGetter: (data) => {
+      return {
+        xData: mockData1.result.data.keyList.map((item) => item) || [],
+        yData: mockData1.result.data.notionalOiList.map((item) => item) || []
+      }
+    }
+  },
+  // 期权最大痛点(日期)
+  {
+    id: 8,
+    name: '期权最大痛点(日期)',
+    value: 66,
+    thresholds: [0, 1000000],
+    linesData: {
+      xData: [],
+      yData: [],
+      ydata2: []
+    },
+    date: '',
+    description: '期权最大痛点(日期)',
+    additionalData: {},
+    valueGetter: (data) =>
+      mockData2.result.find(
+        (e) =>
+          e.time ===
+          mockData1.result.data.keyList[
+            mockData1.result.data.notionalOiList.indexOf(
+              Math.max(...mockData1.result.data.notionalOiList)
+            )
+          ]
+      ).maxPain,
+    dateGetter: () => '',
+    linesDataGetter: (data) => {
+      return {
+        xData: mockData3.result.data.keyList.map((item) => item) || [],
+        yData: mockData3.result.data.callOiList.map((item) => item) || [],
+        yData2: mockData3.result.data.putOiList.map((item) => item) || []
+      }
+    }
   }
+
   // {
   //   id: 9,
   //   name: 'Volume',
@@ -175,6 +244,7 @@ const updateIndicator = (indicator, data) => {
   const linesData = indicator.linesDataGetter(data)
   indicator.linesData.xData = linesData.xData
   indicator.linesData.yData = linesData.yData
+  indicator.linesData.yData2 = linesData.yData2
 }
 
 const fetchData = async (params) => {
@@ -235,7 +305,9 @@ const formatValue = (value) => {
   // 非数字判断，若是字符串，则转为数字； 若无法转为数字，则返回原value
   if (typeof value !== 'number') {
     try {
+      let tmp = value
       value = Number(value)
+      if (isNaN(value)) return tmp
     } catch (error) {
       return value
     }
@@ -334,8 +406,9 @@ onBeforeMount(async () => {
             </span>
             <div class="w-1/2 h-8">
               <chartD
-                :xdata="indicator.linesData.xData.slice(-50)"
-                :data1="indicator.linesData.yData.slice(-50)"
+                :xdata="indicator.linesData.xData"
+                :data1="indicator.linesData.yData"
+                :data2="indicator.linesData.yData2"
               ></chartD>
             </div>
           </div>
@@ -364,7 +437,11 @@ onBeforeMount(async () => {
           <p class="text-sm text-gray-300 mb-2">{{ indicator.description }}</p>
           <!-- 折线图表 -->
           <div v-if="indicator.linesData && !indicator.base64" class="mb-2 h-64">
-            <chartC :xdata="indicator.linesData.xData" :data1="indicator.linesData.yData"></chartC>
+            <chartC
+              :xdata="indicator.linesData.xData"
+              :data1="indicator.linesData.yData"
+              :data2="indicator.linesData.yData2"
+            ></chartC>
           </div>
           <!-- 图片展示 -->
           <div v-if="indicator.base64" class="mb-2 h-64">

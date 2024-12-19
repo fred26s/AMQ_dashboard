@@ -8,6 +8,10 @@ const props = defineProps({
     type: Array,
     default: []
   },
+  data2: {
+    type: Array,
+    default: []
+  },
   xdata: {
     type: Array,
     default: []
@@ -41,6 +45,7 @@ provide(THEME_KEY, 'dark')
 
 const xdata = computed(() => props.xdata)
 const data1 = computed(() => props.data1)
+const data2 = computed(() => props.data2)
 
 const option = ref({
   grid: {
@@ -94,7 +99,7 @@ const option = ref({
       yAxisIndex: 0,
       smooth: true,
       symbol: 'circle',
-      symbolSize: 6,
+      symbolSize: 1,
       areaStyle: {
         color: '#79bff336'
       },
@@ -112,7 +117,24 @@ const option = ref({
           }
         }
       }
-    }
+    },
+    {
+      data: data2,
+      type: 'line',
+      name: 'values',
+      yAxisIndex: 0,
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 1,
+      areaStyle: {
+        color: '#79bff336'
+      },
+      lineStyle: {
+        // red
+        color: '#ff0000',
+        width: 1
+      }
+    },
   ]
 })
 </script>
