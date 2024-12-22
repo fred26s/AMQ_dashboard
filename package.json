@@ -14,6 +14,7 @@
     "@fal-ai/serverless-client": "^0.14.3",
     "axios": "^1.5.0",
     "echarts": "^5.4.3",
+    "js-cookie": "^3.0.5",
     "pinia": "^2.1.6",
     "theme-change": "^2.5.0",
     "vue": "^3.3.4",

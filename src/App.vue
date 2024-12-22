@@ -13,7 +13,11 @@ console.log('organization: ', organization)
 const { user } = useUser()
 console.log('user: ', user)
 
-const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZy']
+const uu = [
+  'user_2blHUZx7JZOaXItnyZUnOp6lhTq',
+  'user_2mCjM9yukFUtAqeqMO1H1Jj0NZy',
+  'user_2oh27yaxqyr8xVY3ZaXMpE40Gvo'
+]
 </script>
 
 <template>
@@ -41,6 +45,9 @@ const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZ
         <li>
           <RouterLink class="w-full text-center" to="/tradePulse">tradePulse</RouterLink>
         </li>
+        <li>
+          <RouterLink class="w-full text-center" to="/plan">plan</RouterLink>
+        </li>
       </template>
 
       <template v-slot:btn1>
@@ -67,9 +74,7 @@ const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZ
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           ></path>
         </svg>
-        <div
-          class="flex flex-row w-full text-xs justify-between content-center flex-wrap"
-        >
+        <div class="flex flex-row w-full text-xs justify-between content-center flex-wrap">
           <div class="badge badge-secondary font-bold">NO FOMO</div>
           <div class="badge badge-secondary font-bold">绝对自信</div>
           <div class="badge badge-secondary font-bold">买定离手</div>
@@ -81,7 +86,7 @@ const uu = ['user_2blHUZx7JZOaXItnyZUnOp6lhTq', 'user_2mCjM9yukFUtAqeqMO1H1Jj0NZ
       </div>
     </div>
     <SignedIn>
-      <RouterView v-if="user && uu.includes(user.id)" />
+      <RouterView v-if="uu.includes(user.id)" />
       <div v-else>
         <div class="mockup-code m-2">
           <pre data-prefix="$"><code>npm i StarBoard</code></pre>

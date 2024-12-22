@@ -1,6 +1,7 @@
 
 /* 默认示例 */
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const service = axios.create({
   baseURL: "/star_api",
@@ -11,6 +12,7 @@ const service = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
+    config.headers.Authorization = `${Cookies.get('__session')}`
     return config;
   }, function (error) {
     // 对请求错误做些什么

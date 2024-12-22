@@ -5,6 +5,7 @@ import monitorView from '../views/monitor.vue'
 import traceView from '../views/trace.vue'
 import drawView from '../views/drawView.vue'
 import tradePulseView from '../views/tradePulse.vue'
+import planView from '../views/planView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,6 +50,11 @@ const router = createRouter({
       path: '/tradePulse',
       name: 'tradePulse',
       component: tradePulseView
+    },
+    {
+      path: '/plan',
+      name: 'plan',
+      component: planView
     }
   ]
 })

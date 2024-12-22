@@ -6,10 +6,16 @@ import chartD from '../components/chartD.vue'
 import loadingButton from '../components/loadingButton.vue'
 import calendarBar from '../components/calendarBar.vue'
 import newsBar from './news.vue'
-import linesData from '../components/lines.json'
 import mockData1 from '../components/mock/000000001.json'
 import mockData2 from '../components/mock/000000002.json'
 import mockData3 from '../components/mock/000000003.json'
+
+const VITE_FUNCTION_URL_FETCH_AMQ = import.meta.env.VITE_FUNCTION_URL_FETCH_AMQ
+if (!VITE_FUNCTION_URL_FETCH_AMQ) {
+  throw new Error('Missing Function URL')
+} else {
+  console.log('Function URL ok.')
+}
 
 const expandedCards = ref([])
 const isLoading = ref(false)
@@ -252,14 +258,14 @@ const fetchData = async (params) => {
     isLoading.value = true
 
     const data = { ...params }
-    const { result, err } = await useFetch('/pulse/moon', {
+    const { result, err } = await useFetch(VITE_FUNCTION_URL_FETCH_AMQ, {
       method: 'get',
       data
     })
 
     if (err) throw new Error(err)
 
-    const responseData = result.value
+    const responseData = JSON.parse(result.value.data)
     // 遍历执行所有数据赋值
     indicatorsConfig.value.forEach((indicator) => {
       updateIndicator(indicator, responseData)
